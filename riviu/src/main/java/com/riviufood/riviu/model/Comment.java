@@ -3,30 +3,24 @@ package com.riviufood.riviu.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Controller;
 
 @Entity
 @Getter
 @Setter
-public class Post {
+public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    private Location location;
+    private String comment;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 
 }
