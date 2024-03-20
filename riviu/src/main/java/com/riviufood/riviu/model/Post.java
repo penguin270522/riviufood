@@ -8,10 +8,8 @@ import org.springframework.stereotype.Controller;
 @Entity
 @Getter
 @Setter
-public class Post {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Post extends BaseEntity {
+
 
     @Column(nullable = false)
     private String title;

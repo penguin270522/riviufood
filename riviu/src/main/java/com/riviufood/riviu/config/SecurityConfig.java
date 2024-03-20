@@ -1,7 +1,7 @@
 package com.riviufood.riviu.config;
 
 import com.riviufood.riviu.filter.WebJwtAuthenticationFilter;
-import com.riviufood.riviu.service.auth.UserServiceImpl;
+import com.riviufood.riviu.service.auth.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -20,36 +20,36 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final UserServiceImpl userDetailsServiceImp;
+    private final UserService userDetailsServiceImp;
     private final WebJwtAuthenticationFilter jwtAuthenticationFilter;
 
     private  final CutomAccessDeniedHandler accessDeniedHandler;
 
-    public SecurityConfig(UserServiceImpl userDetailsServiceImp, WebJwtAuthenticationFilter jwtAuthenticationFilter, CutomAccessDeniedHandler accessDeniedHandler) {
+    public SecurityConfig(UserService userDetailsServiceImp, WebJwtAuthenticationFilter jwtAuthenticationFilter, CutomAccessDeniedHandler accessDeniedHandler) {
         this.userDetailsServiceImp = userDetailsServiceImp;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.accessDeniedHandler = accessDeniedHandler;
     }
 
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/api/auth/login/**", "/api/auth/register/**")
+                        req -> req.requestMatchers("/api/auth/login/**", "/api/auth/register/**")
                                 .permitAll()
                                 .anyRequest().authenticated()
-                                /*.requestMatchers("/admin_only/**").hasRole("ROLE_ADMIN")
-                                .anyRequest()
-                                .authenticated()*/
-                ).userDetailsService(userDetailsServiceImp)
-                .exceptionHandling(e->e.accessDeniedHandler(accessDeniedHandler)
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .sessionManagement(session->session
+                )
+                .userDetailsService(userDetailsServiceImp)
+                /*.exceptionHandling(e -> e.accessDeniedHandler(accessDeniedHandler)
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))*/
+                .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Thay đổi ở đây
                 .build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder(){

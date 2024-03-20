@@ -1,7 +1,7 @@
 package com.riviufood.riviu.filter;
 
 import com.riviufood.riviu.service.auth.JwtService;
-import com.riviufood.riviu.service.auth.UserServiceImpl;
+import com.riviufood.riviu.service.auth.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,9 +20,9 @@ import java.io.IOException;
 public class WebJwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
-    public WebJwtAuthenticationFilter(JwtService jwtService, UserServiceImpl userService) {
+    public WebJwtAuthenticationFilter(JwtService jwtService, UserService userService) {
         this.jwtService = jwtService;
         this.userService = userService;
     }

@@ -42,11 +42,6 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 200)
     private String password;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -57,7 +52,7 @@ public class User implements UserDetails {
     private Collections collections;
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER) //fetch
     private List<Post> post = new ArrayList<>();
 
 
