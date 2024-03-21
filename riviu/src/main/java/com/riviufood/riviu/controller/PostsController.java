@@ -79,6 +79,7 @@ public class PostsController {
                         existingPost.getId(),
                         PictureDTO.builder()
                                 .url(filename)
+                                .post_id(existingPost.getId())
                                 .build()
                 );
                 postPicture.add(picture);
