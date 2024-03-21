@@ -1,9 +1,9 @@
 package com.riviufood.riviu.dtos;
 
-public class AuthenticationResponse {
+public class AuthenticationDTO {
     private String token;
 
-    public AuthenticationResponse(String token) {
+    public AuthenticationDTO(String token) {
         this.token = token;
     }
 

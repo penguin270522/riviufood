@@ -20,7 +20,7 @@ public class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @LastModifiedBy
     @Column(insertable = false)

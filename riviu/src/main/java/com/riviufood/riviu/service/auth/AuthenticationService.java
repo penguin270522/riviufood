@@ -1,6 +1,6 @@
 package com.riviufood.riviu.service.auth;
 
-import com.riviufood.riviu.dtos.AuthenticationResponse;
+import com.riviufood.riviu.dtos.AuthenticationDTO;
 import com.riviufood.riviu.model.Role;
 import com.riviufood.riviu.model.User;
 import com.riviufood.riviu.repository.RoleRepository;
@@ -33,7 +33,7 @@ public class AuthenticationService {
         this.roleRepository = roleRepository;
     }
 
-    public AuthenticationResponse register(User request){
+    public AuthenticationDTO register(User request){
         User user = new User();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -45,10 +45,10 @@ public class AuthenticationService {
         user = repository.save(user);
         String token = jwtService.generateToken(user);
 
-        return new AuthenticationResponse(token);
+        return new AuthenticationDTO(token);
     }
 
-    public AuthenticationResponse authenticate(User request){
+    public AuthenticationDTO authenticate(User request){
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -57,7 +57,7 @@ public class AuthenticationService {
         );
         User user = repository.findByUsername(request.getUsername()).orElseThrow();
         String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token) ;
+        return new AuthenticationDTO(token) ;
 
 
     }
