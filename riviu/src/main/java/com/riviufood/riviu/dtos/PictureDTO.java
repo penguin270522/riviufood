@@ -11,8 +11,13 @@ import lombok.*;
 @NoArgsConstructor // tao constructor voi ko tham so
 public class PictureDTO {
     @JsonProperty("post_id")
-
     private Long post_id;
+
+    @JsonProperty("location_id")
+    private Long location_id;
+
+    @JsonProperty("user_id")
+    private Long user_id;
 
     @JsonProperty("url")
     private String url;

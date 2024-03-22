@@ -1,13 +1,14 @@
 package com.riviufood.riviu.service.auth;
 
 import com.riviufood.riviu.repository.UserRepository;
+import com.riviufood.riviu.service.parent.IUserSevice;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, IUserSevice {
 
     private final UserRepository userRepository;
 
@@ -21,4 +22,6 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("khong tim thay nguoi dung"));
 
     }
+
+
 }

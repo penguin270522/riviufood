@@ -9,4 +9,5 @@ public class ProfileService {
     public static User getLoggedInUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
 }

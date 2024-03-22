@@ -9,23 +9,24 @@ import com.riviufood.riviu.model.Post;
 import com.riviufood.riviu.model.User;
 import com.riviufood.riviu.repository.PictureRepository;
 import com.riviufood.riviu.repository.PostRepository;
-import com.riviufood.riviu.repository.UserRepository;
 import com.riviufood.riviu.service.auth.ProfileService;
+import com.riviufood.riviu.service.parent.IPostsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PostsService implements IPostsService {
-    private final PostRepository postRepositoryresponse;
+
+    private final PostRepository postRepository;
     private final PictureRepository pictureRepository;
 
-    public PostsService(PostRepository postRepositoryresponse, PictureRepository pictureRepository) {
-        this.postRepositoryresponse = postRepositoryresponse;
+    public PostsService(PostRepository postRepository, PictureRepository pictureRepository) {
+        this.postRepository = postRepository;
         this.pictureRepository = pictureRepository;
     }
 
@@ -39,24 +40,12 @@ public class PostsService implements IPostsService {
         post.setCreatedDate(new Date());
         post.setUser(user);
         post.setCreateBy(user.getUsername());
-        postRepositoryresponse.save(post);
+        postRepository.save(post);
     }
 
     @Override
     public Picture createPicture(Long postId, PictureDTO pictureDTO) {
-        Post existingPost = postRepositoryresponse.findById(pictureDTO.getPost_id())
-                .orElseThrow(() -> new DataNotFoundException("cannot find post with id = " + pictureDTO.getPost_id())
-                        );
-        Picture picture = Picture.builder()
-                .post(existingPost)
-                .url(pictureDTO.getUrl())
-                .build();
-        // cannt insert 5 picture for post
-        int size = pictureRepository.findByPostId(postId).size();
-        if(size >= 5){
-            throw new InvalidParamExcaption("cannot insert 5 img for post");
-        }
-        return pictureRepository.save(picture);
+        return null;
     }
 
     @Override
@@ -68,18 +57,18 @@ public class PostsService implements IPostsService {
        post.setCreatedDate(new Date());
        post.setUser(user);
        post.setCreateBy(user.getFirstName() + " " + user.getLastName());
-       return postRepositoryresponse.save(post);
+       return postRepository.save(post);
     }
 
     public Post getPostById(Long postId) {
-      return postRepositoryresponse.findById(postId)
+      return postRepository.findById(postId)
               .orElseThrow(()-> new DataNotFoundException("dont find post id = " + postId));
     }
 
     @Override
     public Page<Post> getAllPost(PageRequest pageRequest) {
         //Retrieve posts by page and limit
-        return postRepositoryresponse.findAll(pageRequest);
+        return postRepository.findAll(pageRequest);
     }
 
     @Override
@@ -88,21 +77,26 @@ public class PostsService implements IPostsService {
         if(post != null){
             post.setTitle(postDTO.getTitle());
             post.setContent(postDTO.getContent());
-            return postRepositoryresponse.save(post);
+            return postRepository.save(post);
         }
         return null;
     }
 
     @Override
     public void deletePost(long id) {
-        Optional<Post> optionalPost =  postRepositoryresponse.findById(id);
-        // if optionalPost get Post findById = id -> response::delete tham chieu den ham delete
-        optionalPost.ifPresent(postRepositoryresponse::delete);
+        Post post = postRepository.findById(id).orElseThrow(()
+        -> new DataNotFoundException("cannot find post with id = " + id));
+        List<Picture> pictures = pictureRepository.findByPostId(id);
+        for (Picture picture : pictures) {
+            pictureRepository.delete(picture);
+        }
+        postRepository.delete(post);
+
     }
 
     @Override
     public boolean existsByTitle(String title) {
-        return postRepositoryresponse.existsByTitle(title);
+        return postRepository.existsByTitle(title);
     }
 
 

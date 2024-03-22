@@ -1,4 +1,4 @@
-package com.riviufood.riviu.service;
+package com.riviufood.riviu.service.parent;
 
 import com.riviufood.riviu.dtos.PictureDTO;
 import com.riviufood.riviu.dtos.PostDTO;

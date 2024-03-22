@@ -1,9 +1,7 @@
 package com.riviufood.riviu.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Time;
 import java.time.LocalTime;
@@ -12,6 +10,9 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Location extends BaseEntity{
     @Column(nullable = false, unique = true, length = 255)
     private String name;
@@ -28,8 +29,8 @@ public class Location extends BaseEntity{
     @Column(nullable = false, length = 255)
     private Integer highestPrince;
 
-    private LocalTime  openTime;
-    private LocalTime closeTime;
+    private String  openTime;
+    private String closeTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

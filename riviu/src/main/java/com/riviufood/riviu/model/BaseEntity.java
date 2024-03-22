@@ -27,7 +27,7 @@ public class BaseEntity {
     private Integer updatedBy;
 
     @CreatedDate
-    @Column(nullable = true, updatable = false)
+    @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
