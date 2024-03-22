@@ -3,18 +3,16 @@ package com.riviufood.riviu.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Picture {
+@Entity
+public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String url;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -25,6 +23,8 @@ public class Picture {
     private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
-    private Location location;
+    @JoinColumn(name = "tag_report_id")
+    private TagReport tagReport;
+
+    private String reporting_reason;
 }

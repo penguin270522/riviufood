@@ -1,20 +1,19 @@
 package com.riviufood.riviu.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class Picture {
+public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String url;
+    private String comment;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -24,7 +23,4 @@ public class Picture {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    private Location location;
 }
