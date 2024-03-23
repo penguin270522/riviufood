@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -45,6 +46,16 @@ public class PostsController {
         return ResponseEntity.ok("delete success!");
     }
 
+    @GetMapping
+    public ResponseEntity<?> searchPostByTitle(@RequestParam String title){
+        List<Post> post = postService.searchByTitle(title);
+        return ResponseEntity.ok().body(post);
+    }
 
+    @GetMapping("/postall")
+    public ResponseEntity<?> findByALl(){
+        List<Post> post = postService.findByAll();
+        return ResponseEntity.ok(post);
+    }
 
 }

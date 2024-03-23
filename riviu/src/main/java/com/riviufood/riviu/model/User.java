@@ -1,5 +1,6 @@
 package com.riviufood.riviu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -51,7 +52,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "collection_id")
     private Collections collections;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER) //fetch
     private List<Post> post = new ArrayList<>();
 

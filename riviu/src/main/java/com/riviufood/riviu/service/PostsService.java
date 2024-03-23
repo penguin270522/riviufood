@@ -1,5 +1,6 @@
 package com.riviufood.riviu.service;
 
+import com.riviufood.riviu.converter.PostConverter;
 import com.riviufood.riviu.dtos.PictureDTO;
 import com.riviufood.riviu.dtos.PostDTO;
 import com.riviufood.riviu.exception.DataNotFoundException;
@@ -11,10 +12,12 @@ import com.riviufood.riviu.repository.PictureRepository;
 import com.riviufood.riviu.repository.PostRepository;
 import com.riviufood.riviu.service.auth.ProfileService;
 import com.riviufood.riviu.service.parent.IPostsService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +49,19 @@ public class PostsService implements IPostsService {
     @Override
     public Picture createPicture(Long postId, PictureDTO pictureDTO) {
         return null;
+    }
+
+    @Override
+    public List<Post> searchByTitle(String title) {
+
+        List<Post> results = postRepository.searchByTitle(title);
+        return results;
+    }
+
+    @Override
+    public List<Post> findByAll() {
+
+        return postRepository.findAll();
     }
 
     @Override
