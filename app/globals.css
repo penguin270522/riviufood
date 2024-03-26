@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #f60;
+  --secondary-color: #ff8a00;
+  --text-c-primary: #212529;
+  --text-c-second: #898c95;
+  --bg-input: #f4f5f8;
+
+  --px-header: 40px;
+  --px-body: 40px;
+}
+
+input {
+  outline: none;
+  background: transparent;
+}
