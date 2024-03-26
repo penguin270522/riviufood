@@ -21,6 +21,7 @@ public class LocationController {
 
 
     @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createLocation(@RequestBody LocationDTO locationDTO){
         try{
             Location location = locationService.createLocation(locationDTO);
@@ -41,6 +42,12 @@ public class LocationController {
     public ResponseEntity<?> deleteLocations(@RequestBody List<Long> locationId){
         locationService.deleteAllById(locationId);
         return ResponseEntity.ok("delete success!");
+    }
+
+    @GetMapping("/search")
+    public List<LocationDTO> searchLocation(@RequestParam String name){
+
+        return locationService.searchLocation(name);
     }
 
 

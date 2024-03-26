@@ -17,4 +17,6 @@ public interface ILocationService {
 
     void deleteAllById(List<Long> ids);
 
+    List<LocationDTO> searchLocation(String name);
+
 }

@@ -61,7 +61,7 @@ public class PictureController {
         }
     }
 
-    @PostMapping(value = "/location/location/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/location/uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadImagesLocation(
             @PathVariable("id") Long locationId,
             @ModelAttribute("files") List<MultipartFile> files) throws IOException {

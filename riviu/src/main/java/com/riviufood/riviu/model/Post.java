@@ -1,5 +1,6 @@
 package com.riviufood.riviu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "location_id")
     private Location location;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

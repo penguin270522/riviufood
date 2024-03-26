@@ -52,7 +52,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "collection_id")
     private Collections collections;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER) //fetch
     private List<Post> post = new ArrayList<>();
 

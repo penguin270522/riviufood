@@ -10,6 +10,7 @@ import com.riviufood.riviu.service.auth.ProfileService;
 import com.riviufood.riviu.service.parent.ILocationService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 @Service
@@ -52,5 +53,17 @@ public class LocationService implements ILocationService {
     @Override
     public void deleteAllById(List<Long> ids) {
         locationRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public List<LocationDTO> searchLocation(String name) {
+        List<Location> locations = locationRepository.searchByName(name);
+        List<LocationDTO> results = new ArrayList<>();
+        for(Location item : locations){
+            LocationDTO locationDTO = new LocationDTO();
+            locationDTO.setName(item.getName());
+            results.add(locationDTO);
+        }
+        return results;
     }
 }

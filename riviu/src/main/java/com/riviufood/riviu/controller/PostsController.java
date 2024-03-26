@@ -34,6 +34,7 @@ public class PostsController {
                 return ResponseEntity.badRequest().body(erroMessage);
             }
             Post post = postService.createPosts(postDTO);;
+
             return ResponseEntity.ok().body(post);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
