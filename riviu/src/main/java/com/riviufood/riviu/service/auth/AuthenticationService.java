@@ -1,6 +1,7 @@
 package com.riviufood.riviu.service.auth;
 
 import com.riviufood.riviu.dtos.AuthenticationDTO;
+import com.riviufood.riviu.dtos.UserDto;
 import com.riviufood.riviu.model.Role;
 import com.riviufood.riviu.model.User;
 import com.riviufood.riviu.repository.RoleRepository;
@@ -33,11 +34,9 @@ public class AuthenticationService {
         this.roleRepository = roleRepository;
     }
 
-    public AuthenticationDTO register(User request){
+    public AuthenticationDTO register(UserDto request){
         User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setUsername(request.getUsername());
+        user.setUsername(request.getName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role role = roleRepository.findByCode("ROLE_USER");
         user.setRole(role);
@@ -48,14 +47,17 @@ public class AuthenticationService {
         return new AuthenticationDTO(token);
     }
 
-    public AuthenticationDTO authenticate(User request){
+    public AuthenticationDTO authenticate(UserDto request){
+        User user = new User();
+        user.setUsername(request.getName());
+        user.setPassword(request.getPassword());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
+                        user.getUsername(),
+                        user.getPassword()
                 )
         );
-        User user = repository.findByUsername(request.getUsername()).orElseThrow();
+        user = repository.findByUsername(user.getUsername()).orElseThrow();
         String token = jwtService.generateToken(user);
         return new AuthenticationDTO(token) ;
 

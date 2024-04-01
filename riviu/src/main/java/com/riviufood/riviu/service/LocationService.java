@@ -27,7 +27,7 @@ public class LocationService implements ILocationService {
     @Override
     public Location findById(long id) {
         return locationRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("cannot find location with id " + id));
+                    .orElseThrow(() -> new DataNotFoundException("cannot find location with id " + id));
     }
 
     @Override
@@ -35,6 +35,7 @@ public class LocationService implements ILocationService {
         Location location = locationConverter.convertDtoToEntity(locationDTO);
         User user = ProfileService.getLoggedInUser();
         location.setCreateBy(user.getFirstName() + " - " + user.getLastName());
+        location.setUser(user);
         location.setCreatedDate(new Date());
         return locationRepository.save(location);
     }

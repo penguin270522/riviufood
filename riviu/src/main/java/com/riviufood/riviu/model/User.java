@@ -20,7 +20,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 public class User implements UserDetails {
 
@@ -28,10 +27,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String lastName;
 
     @Column(nullable = false, length = 200)
@@ -61,6 +60,8 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities()   {
         return List.of(new SimpleGrantedAuthority(getRole().getCode()));
     }
+
+
 
 
     @Override

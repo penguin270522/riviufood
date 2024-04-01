@@ -1,6 +1,7 @@
 package com.riviufood.riviu.controller.auth;
 
 import com.riviufood.riviu.dtos.AuthenticationDTO;
+import com.riviufood.riviu.dtos.UserDto;
 import com.riviufood.riviu.model.User;
 import com.riviufood.riviu.service.auth.AuthenticationService;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +19,17 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationDTO> register(
-            @RequestBody User request
+            @RequestBody UserDto request
     ){
-        return ResponseEntity.ok(authService.register(request));
+        AuthenticationDTO authenticationDTO = authService.register(request);
+        return ResponseEntity.ok(authenticationDTO);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationDTO> login(
-            @RequestBody User request
+            @RequestBody UserDto request
     ){
-        return ResponseEntity.ok(authService.authenticate(request));
+        AuthenticationDTO authenticationDTO = authService.authenticate(request);
+        return ResponseEntity.ok(authenticationDTO);
     }
 }

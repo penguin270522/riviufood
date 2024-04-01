@@ -21,7 +21,7 @@ public class LocationController {
 
 
     @PostMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    /*@PreAuthorize("hasRole('ROLE_USER')")*/
     public ResponseEntity<?> createLocation(@RequestBody LocationDTO locationDTO){
         try{
             Location location = locationService.createLocation(locationDTO);
@@ -32,7 +32,7 @@ public class LocationController {
 
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<?> getAllLocation(){
         List<Location> locationList= locationService.findByAll();
         return ResponseEntity.ok(locationList);
@@ -50,5 +50,11 @@ public class LocationController {
         return locationService.searchLocation(name);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id){
+        Location location = locationService.findById(id);
+
+        return ResponseEntity.ok(location);
+    }
 
 }

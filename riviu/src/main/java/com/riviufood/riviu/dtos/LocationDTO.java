@@ -13,16 +13,12 @@ import java.time.LocalTime;
 public class LocationDTO {
 
     private String name;
-
-    private String address;
-
     private String numberPhone;
-
-    private Integer lowestPrince;
-
-    private Integer highestPrince;
-
+    private Long lowestPrince;
+    private Long highestPrince;
     private String openTime;
     private String closeTime;
+    private String address;
+
 
 }

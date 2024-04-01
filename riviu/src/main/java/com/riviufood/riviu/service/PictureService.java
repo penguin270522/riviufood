@@ -46,7 +46,7 @@ public class PictureService implements IPicture {
     @Override
     public Picture createPictureLocation(Long locationId, PictureDTO pictureDTO) {
         Location existingLocation = locationRepository.findById(pictureDTO.getLocation_id())
-                .orElseThrow(() -> new DataNotFoundException("cannot find post with id = " + pictureDTO.getLocation_id())
+                .orElseThrow(() -> new DataNotFoundException("cannot find location with id = " + pictureDTO.getLocation_id())
                 );
         Picture picture = Picture.builder()
                 .location(existingLocation)

@@ -29,7 +29,6 @@ public class AreaService implements IAreaService {
     public Area createArea(AreaDTO areaDTO) {
         Area area = areaConverter.converDTOToEntity(areaDTO);
         area.setCreatedDate(new Date());
-
         return areaRepository.save(area);
     }
 }

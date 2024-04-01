@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("picture")
+@RequestMapping("/picture")
 public class PictureController {
     private final PictureHandle pictureHandle;
     private final PostsService postService;
@@ -72,11 +72,11 @@ public class PictureController {
             for(MultipartFile file : files){
                 pictureHandle.validateImageInput(file);
                 String filename = pictureHandle.storeFile(file);
-                Picture picture = pictureService.createPicturePost(
+                Picture picture = pictureService.createPictureLocation(
                         existingLocation.getId(),
                         PictureDTO.builder()
                                 .url(filename)
-                                .post_id(existingLocation.getId())
+                                .location_id(existingLocation.getId())
                                 .build()
                 );
                 postPicture.add(picture);
