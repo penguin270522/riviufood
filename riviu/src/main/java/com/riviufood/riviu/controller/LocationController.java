@@ -20,11 +20,12 @@ public class LocationController {
     }
 
 
-    @PostMapping("")
-    /*@PreAuthorize("hasRole('ROLE_USER')")*/
-    public ResponseEntity<?> createLocation(@RequestBody LocationDTO locationDTO){
+    @PostMapping("/{areaId}")
+    public ResponseEntity<?> createLocation(@RequestBody LocationDTO locationDTO,
+                                            @PathVariable Long areaId
+    ){
         try{
-            Location location = locationService.createLocation(locationDTO);
+            Location location = locationService.createLocation(locationDTO, areaId);
             return ResponseEntity.ok(location);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

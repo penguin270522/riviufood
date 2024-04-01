@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface ILocationService {
     Location findById(long id);
-    Location createLocation(LocationDTO locationDTO);
+    Location createLocation(LocationDTO locationDTO, long areaId);
 
     List<Location> findByAll();
 

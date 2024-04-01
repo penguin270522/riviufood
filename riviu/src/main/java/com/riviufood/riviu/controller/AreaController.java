@@ -33,5 +33,11 @@ public class AreaController {
          return ResponseEntity.ok(results);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id){
+        Area area = areaService.findById(id);
+        return ResponseEntity.ok(area);
+    }
+
 
 }

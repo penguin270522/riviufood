@@ -10,4 +10,6 @@ import java.util.List;
 public interface IAreaService {
     List<Area> findByAll();
     Area createArea(AreaDTO areaDTO);
+
+    Area findById(Long id);
 }

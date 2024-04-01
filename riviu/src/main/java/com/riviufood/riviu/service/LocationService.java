@@ -3,6 +3,7 @@ package com.riviufood.riviu.service;
 import com.riviufood.riviu.converter.LocationConverter;
 import com.riviufood.riviu.dtos.LocationDTO;
 import com.riviufood.riviu.exception.DataNotFoundException;
+import com.riviufood.riviu.model.Area;
 import com.riviufood.riviu.model.Location;
 import com.riviufood.riviu.model.User;
 import com.riviufood.riviu.repository.LocationRepository;
@@ -19,9 +20,13 @@ public class LocationService implements ILocationService {
     private final LocationRepository locationRepository;
     private final LocationConverter locationConverter;
 
-    public LocationService(LocationRepository locationRepository, LocationConverter locationConverter) {
+    private final AreaService areaService;
+
+
+    public LocationService(LocationRepository locationRepository, LocationConverter locationConverter, AreaService areaService) {
         this.locationRepository = locationRepository;
         this.locationConverter = locationConverter;
+        this.areaService = areaService;
     }
 
     @Override
@@ -31,11 +36,13 @@ public class LocationService implements ILocationService {
     }
 
     @Override
-    public Location createLocation(LocationDTO locationDTO) {
+    public Location createLocation(LocationDTO locationDTO, long areaId) {
+        Area area = areaService.findById(areaId);
         Location location = locationConverter.convertDtoToEntity(locationDTO);
         User user = ProfileService.getLoggedInUser();
         location.setCreateBy(user.getFirstName() + " - " + user.getLastName());
         location.setUser(user);
+        location.setArea(area);
         location.setCreatedDate(new Date());
         return locationRepository.save(location);
     }

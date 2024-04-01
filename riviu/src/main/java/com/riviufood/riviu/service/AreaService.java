@@ -31,4 +31,10 @@ public class AreaService implements IAreaService {
         area.setCreatedDate(new Date());
         return areaRepository.save(area);
     }
+
+    @Override
+    public Area findById(Long id) {
+        Area area = areaRepository.findById(id).orElseThrow();
+        return area;
+    }
 }
