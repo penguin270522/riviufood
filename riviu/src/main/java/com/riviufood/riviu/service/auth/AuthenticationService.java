@@ -50,6 +50,8 @@ public class AuthenticationService {
         user = repository.save(user);
         collections.setUser(user);
         collectionRepository.save(collections);
+        user.setCollections(collections);
+        repository.save(user);
         String token = jwtService.generateToken(user);
 
         return new AuthenticationDTO(token);
