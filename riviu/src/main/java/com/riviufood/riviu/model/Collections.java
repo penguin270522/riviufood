@@ -1,6 +1,9 @@
 package com.riviufood.riviu.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,11 +22,13 @@ public class Collections {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name ="user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "collections",fetch = FetchType.EAGER) //fetch
+    @JsonIgnore
     private List<CollectionPost> post = new ArrayList<>();
 
 }

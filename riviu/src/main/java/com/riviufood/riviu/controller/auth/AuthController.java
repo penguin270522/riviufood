@@ -4,6 +4,7 @@ import com.riviufood.riviu.dtos.AuthenticationDTO;
 import com.riviufood.riviu.dtos.UserDto;
 import com.riviufood.riviu.model.User;
 import com.riviufood.riviu.service.auth.AuthenticationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,18 +19,16 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationDTO> register(
-            @RequestBody UserDto request
-    ){
-        AuthenticationDTO authenticationDTO = authService.register(request);
-        return ResponseEntity.ok(authenticationDTO);
+    public ResponseEntity<?> register(@RequestBody UserDto userRegisterDTO) {
+        User response = authService.createUser(userRegisterDTO);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationDTO> login(
+    public ResponseEntity<?> login(
             @RequestBody UserDto request
     ){
-        AuthenticationDTO authenticationDTO = authService.authenticate(request);
+        AuthenticationDTO authenticationDTO = authService.login(request);
         return ResponseEntity.ok(authenticationDTO);
     }
 }

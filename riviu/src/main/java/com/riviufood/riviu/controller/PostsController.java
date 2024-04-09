@@ -21,7 +21,7 @@ public class PostsController {
     }
 
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<?> createPost (
             @RequestBody PostDTO postDTO,
             BindingResult result){

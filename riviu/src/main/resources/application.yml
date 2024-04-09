@@ -18,3 +18,7 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
+
+jwt:
+  expiration: 2592000 #30 days = 30 * 24 * 60 * 60
+  secretkey: WKVVN/adM+O2VbpXHpD9V5PGoCkwHASpJV6L5kzRQiw=

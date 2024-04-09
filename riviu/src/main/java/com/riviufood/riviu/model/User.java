@@ -21,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class User implements UserDetails {
 
     @Id
@@ -58,7 +59,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()   {
-        return List.of(new SimpleGrantedAuthority(getRole().getCode()));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(getRole().getCode()));
+        return authorities;
     }
 
 

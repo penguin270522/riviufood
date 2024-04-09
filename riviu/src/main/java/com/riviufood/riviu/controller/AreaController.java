@@ -21,13 +21,13 @@ public class AreaController {
     }
 
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> createArea(@RequestBody AreaDTO areaDTO){
         Area area = areaService.createArea(areaDTO);
         return ResponseEntity.ok(area);
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> findAllArea(){
         List<Area> results = areaService.findByAll();
          return ResponseEntity.ok(results);
