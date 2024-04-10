@@ -13,7 +13,7 @@ import { showToast } from "@/utils/toastify";
 
 export default function ModalLogin() {
   const [userLogin, setUserLogin] = useState({
-    email: "",
+    name: "",
     password: "",
   });
 
@@ -32,12 +32,14 @@ export default function ModalLogin() {
   const handleLogin = async () => {
     try {
       setIsLoading(true);
-      const { email, password } = userLogin;
-      if (!email || !password) {
+      const { name, password } = userLogin;
+      if (!name || !password) {
         showToast("Hãy nhập đầy đủ thông để đăng nhập");
         return;
       }
-      const { data } = await userLoginApi(email, password);
+      const { data } = await userLoginApi(name, password);
+
+      localStorage.setItem("token", data.token);
 
       dispatch(
         setCurrentUserLogin({
@@ -48,7 +50,7 @@ export default function ModalLogin() {
       saveAuthToken(data.token);
 
       dispatch(removeModalType());
-      showToast("Thành công");
+      showToast("Đăng nhập thành công");
     } catch (error) {
       console.log("error : ", error);
       showToast("Hãy kiểm tra lại email và mật khẩu");
@@ -90,7 +92,7 @@ export default function ModalLogin() {
               <div className="w-full h-[48px]">
                 <input
                   type="text"
-                  name="email"
+                  name="name"
                   placeholder="Nhập email"
                   className="outline-none bg-input p-4 text-lg w-full h-full rounded-xl"
                   onChange={handleOnchangeInput}

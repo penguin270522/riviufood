@@ -1,23 +1,36 @@
 import { axiosAuthCookie, axiosAuthCookieMultiData, axiosNonAuth } from "./api";
 import { getCookie } from "./common";
 import { ICreateComment } from "./interface";
+import axios from "axios";
 
 export const getUserById = async (userId: string) => {
-  return await axiosAuthCookie.get(`/users/${userId}`);
+  return await axiosAuthCookie.get(`/api/auth/${userId}`);
 };
 
-export const getCurrentUser = async () => {
-  const token = getCookie("access_token");
-  return await axiosAuthCookie.get("/users/me", {
-    headers: {
-      token: token,
-    },
-  });
-};
+export const getToken = async (
+  email: string,
+  name: string,
+  id: string
+) => {
+  try {
+    const response = await axios.post(
+      "http://26.177.67.186:8080/api/auth/login",
+      {
+        email: email,
+        name: name,
+        id: id,
+      }
+    );
 
-export const userLogin = async (email: string, password: string) => {
-  return await axiosNonAuth.post("/users/sign-in", {
-    email,
+    return response.data.token;
+  } catch (error) {
+    console.error("Lỗi:", error);
+    return null;
+  }
+};
+export const userLogin = async (name: string, password: string) => {
+  return await axiosNonAuth.post("/api/auth/login", {
+    name,
     password,
   });
 };
@@ -27,7 +40,7 @@ export const userSignUpApi = async (
   password: string,
   name: string
 ) => {
-  return await axiosNonAuth.post("/users/sign-up", {
+  return await axiosNonAuth.post("/api/auth/register", {
     email,
     password,
     name,
@@ -35,11 +48,11 @@ export const userSignUpApi = async (
 };
 
 export const getStores = async (search?: string) => {
-  return await axiosNonAuth.get(`/stores${search ? `?search=${search}` : ""}`);
+  return await axiosNonAuth.get(`/posts${search ? `?search=${search}` : ""}`);
 };
 
 export const getStoreById = async (storeId: string) => {
-  return await axiosNonAuth.get(`/stores/${storeId}`);
+  return await axiosNonAuth.get(`/posts/postall/${storeId}`);
 };
 
 export const uploadImagesReview = async (
@@ -86,11 +99,11 @@ export const getUserStores = async (userId: string) => {
 };
 
 export const getTopStores = async () => {
-  return await axiosAuthCookie.get(`/stores/top`);
+  return await axiosAuthCookie.get(`/posts/postall`);
 };
 
 export const getTopUsersReviews = async () => {
-  return await axiosAuthCookie.get(`/reviews/top/users`);
+  return await axiosAuthCookie.get(`/posts/postall`);
 };
 
 export const getReviewsByNational = async (

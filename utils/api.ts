@@ -3,8 +3,16 @@ import store from "@/redux/store";
 import { getCookie, setCookie } from "@/utils/common";
 // import { showToast } from '@/utils/helpers/toastify';
 import axios from "axios";
-export const baseURL = "http://localhost:4000/api";
+export const baseURL = "http://26.177.67.186:8080";
 const myCookieValue = getCookie("token");
+
+export const checkToken = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
+};  
+
 
 export const axiosNonAuth = axios.create({
   baseURL,
@@ -31,6 +39,7 @@ const setAuthToken = (token: string) => {
   axiosAuthCookie.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
 
+// Lấy token từ cookie và set vào axiosAuthCookie
 const loadAuthToken = () => {
   const token = myCookieValue;
 
@@ -50,7 +59,7 @@ export const saveAuthToken = (token: string) => {
 axiosAuthCookie.interceptors.response.use(
   (response) => {
     // xử lý dữ liệu thành công trả về
-    // console.log('res axiosAuthCookie : ', response);
+    console.log("res axiosAuthCookie : ", response);
 
     return response;
   },

@@ -74,7 +74,7 @@ export default function Stores() {
             ))}
           </div>
 
-          {/* list revieưs */}
+          {/* list reviews */}
           <div className="py-4">
             <div className="grid grid-cols-4 gap-4">
               {stores.map((store, index) => (

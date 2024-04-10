@@ -32,7 +32,7 @@ export default function ModalSignUp() {
       setIsLoading(true);
       const { email, password, name } = userLogin;
       if (!email || !password || !name) {
-        showToast("Hãy nhập đầy đủ thông để đăng nhập", "error");
+        showToast("Hãy nhập đầy đủ thông để đăng ký", "error");
         return;
       }
 

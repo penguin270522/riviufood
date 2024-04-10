@@ -1,14 +1,14 @@
 "use client";
 
-import Image from "next/image";
-import { BtnCommon, UserHeader } from "..";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setModalType } from "@/redux/slices/modalSlice";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { getCurrentUser } from "@/utils/proxy";
 import { setUserMe } from "@/redux/slices/authSlice";
+import { setModalType } from "@/redux/slices/modalSlice";
+import { getToken } from "@/utils/proxy";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { BtnCommon, UserHeader } from "..";
 
 export default function Header() {
   const { currentUser, access_token } = useAppSelector((state) => state.auth);
@@ -17,19 +17,26 @@ export default function Header() {
   const router = useRouter();
 
   useEffect(() => {
+    const email ="";
+    const name="";
+    const id="";
     if (access_token && !currentUser?._id) {
       const getUser = async () => {
         try {
-          const { data } = await getCurrentUser();
-          dispatch(setUserMe(data.data));
+          const userData = await getToken(email, name, id);
+          if (userData) {
+            dispatch(setUserMe(userData));
+            console.log("Dữ liệu nhận được:", userData);
+          } else {
+            console.log("Không tìm thấy thông tin người dùng.");
+          }
         } catch (error) {
-          console.log(error);
+          console.log("Lỗi:", error);
         }
       };
       getUser();
     }
-  }, [access_token]);
-
+  }, [access_token, currentUser]);
   const handleOpenModalSearch = () => {
     dispatch(setModalType("SEARCH_STORE"));
   };

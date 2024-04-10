@@ -38,7 +38,6 @@ const authSlice = createSlice({
     },
     currentUserLogOut: (state) => {
       removeCookie("access_token");
-
       state.currentUser = null;
       state.access_token = null;
       state.isLoading = false;
