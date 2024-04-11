@@ -22,7 +22,7 @@ public class TagReport {
     @Column(nullable = false, unique = true, length = 200)
     private String code;
 
-    @OneToMany(mappedBy = "tagReport")
+    @OneToMany(mappedBy = "tagReport", cascade = CascadeType.ALL)
     private List<Report> report = new ArrayList<>();
 
 }

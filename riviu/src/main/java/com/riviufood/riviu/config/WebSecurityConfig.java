@@ -86,7 +86,7 @@ public class WebSecurityConfig {
                                     "location/all"
                             )
                             .permitAll()
-                            .requestMatchers(HttpMethod.POST,"posts").hasRole("ADMIN")
+                            /*.requestMatchers(HttpMethod.POST,"posts").hasRole("ADMIN")*/
                             .anyRequest().authenticated();
                 })
                 .csrf(AbstractHttpConfigurer::disable);

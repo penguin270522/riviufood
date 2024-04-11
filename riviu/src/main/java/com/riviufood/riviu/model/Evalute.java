@@ -14,15 +14,27 @@ public class Evalute {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id")
     private Post post;
 
-    private Integer smell;
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
+
+    private Integer overall;
+
+    private Integer cleanLiness;
+
+    private Integer flavor;
 
     private Integer space;
 
     private Integer price;
 
-    private Integer serve;
+    private Integer service;
+
+    public int totelEvalute(){
+        return (overall + cleanLiness + flavor + space + price + service)/6;
+    }
 }

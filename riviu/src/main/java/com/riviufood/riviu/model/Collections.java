@@ -22,12 +22,12 @@ public class Collections {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name ="user_id")
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "collections",fetch = FetchType.EAGER) //fetch
+    @OneToMany(mappedBy = "collections",fetch = FetchType.EAGER,cascade = CascadeType.ALL) //fetch
     @JsonIgnore
     private List<CollectionPost> post = new ArrayList<>();
 
