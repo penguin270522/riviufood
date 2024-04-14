@@ -11,7 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Area extends BaseEntity{
-
     @Column(nullable = false, unique = true, length = 255)
     private String name;
     @Column(nullable = false, unique = true, length = 255)

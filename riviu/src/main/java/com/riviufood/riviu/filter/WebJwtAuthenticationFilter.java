@@ -91,10 +91,12 @@ public class WebJwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isBypassToken(@NonNull HttpServletRequest request){
-        final List<Pair<String,String>> bypassTokens = Arrays.asList(
-                Pair.of("/location", "GET"),
+            final List<Pair<String,String>> bypassTokens = Arrays.asList(
                 Pair.of("/api/auth/login", "POST"),
-                Pair.of("/api/auth/register", "POST")
+                Pair.of("/api/auth/register", "POST"),
+                Pair.of("/location", "GET"),
+                Pair.of("/review/all", "GET"),
+                    Pair.of("/review/", "GET")
         );
         for(Pair<String , String> bypassToken : bypassTokens){
             if(request.getServletPath().contains(bypassToken.getFirst()) &&

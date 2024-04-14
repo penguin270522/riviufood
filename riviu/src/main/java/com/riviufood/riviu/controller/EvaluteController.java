@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class EvaluteController {
     private final EvaluteService evaluteService;
-    @PostMapping("/postId")
+    @PostMapping("/{postId}")
     public ResponseEntity<Evalute> evaluteWithPostForCollection(@PathVariable Long postId, @RequestBody EvaluteDTO evaluteDTO) {
         Evalute evalute = null;
         try {

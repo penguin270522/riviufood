@@ -1,5 +1,6 @@
 package com.riviufood.riviu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,11 +15,12 @@ public class Evalute {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_id")
+    @OneToOne
+    @JsonIgnore
     private Post post;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "location_id")
     private Location location;
 

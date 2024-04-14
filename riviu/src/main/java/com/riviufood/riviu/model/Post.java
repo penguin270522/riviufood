@@ -13,8 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Post extends BaseEntity {
-
-
     @Column(nullable = false)
     private String title;
 
@@ -30,16 +28,17 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "evaluate_id", referencedColumnName = "id")
     private Evalute evaluate;
 
-    @OneToMany(mappedBy ="post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy ="post", cascade = CascadeType.REMOVE)
     private List<Picture> picture = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<CollectionPost> collectionPosts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
 }

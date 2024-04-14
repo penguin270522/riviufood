@@ -1,5 +1,6 @@
 package com.riviufood.riviu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,7 +26,6 @@ public class Location extends BaseEntity{
     @Column(nullable = false, length = 255)
     private String numberPhone;
 
-    @Column(nullable = false, length = 255)
     private Integer lowestPrince;
 
     @Column(nullable = false, length = 255)
@@ -34,9 +34,17 @@ public class Location extends BaseEntity{
     private String  openTime;
     private String closeTime;
 
-    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
+    private String watchWord;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "locationfood_id")
+    private LocationFood locationFood;
+
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -48,19 +56,18 @@ public class Location extends BaseEntity{
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Evalute> evaluates;
 
-    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Picture> pictures = new ArrayList<>();
 
-    public int getTotalEvulate(){
-        if(evaluates != null){
+    public int getTotalEvulate() {
+        if (evaluates != null && evaluates.size() > 0) {
             int size = evaluates.size();
             int total = 0;
-            for(Evalute evalute : evaluates){
+            for (Evalute evalute : evaluates) {
                 total += evalute.totelEvalute();
             }
-            return total/size;
-        }
-        else {
+            return total / size;
+        } else {
             return 0;
         }
     }

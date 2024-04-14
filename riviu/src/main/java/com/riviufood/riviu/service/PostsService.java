@@ -5,6 +5,7 @@ import com.riviufood.riviu.dtos.PictureDTO;
 import com.riviufood.riviu.dtos.PostDTO;
 import com.riviufood.riviu.exception.DataNotFoundException;
 import com.riviufood.riviu.exception.InvalidParamExcaption;
+import com.riviufood.riviu.model.Location;
 import com.riviufood.riviu.model.Picture;
 import com.riviufood.riviu.model.Post;
 import com.riviufood.riviu.model.User;
@@ -24,11 +25,12 @@ import java.util.Optional;
 
 @Service
 public class PostsService implements IPostsService {
-
+    private final LocationService locationService;
     private final PostRepository postRepository;
     private final PictureRepository pictureRepository;
 
-    public PostsService(PostRepository postRepository, PictureRepository pictureRepository) {
+    public PostsService(LocationService locationService, PostRepository postRepository, PictureRepository pictureRepository) {
+        this.locationService = locationService;
         this.postRepository = postRepository;
         this.pictureRepository = pictureRepository;
     }
@@ -65,14 +67,16 @@ public class PostsService implements IPostsService {
     }
 
     @Override
-    public Post createPosts(PostDTO postDTO) {
+    public Post createPosts(PostDTO postDTO, long postId) {
        User user = ProfileService.getLoggedInUser();
+       Location location = locationService.findById(postId);
        Post post = new Post();
        post.setTitle(postDTO.getTitle());
        post.setContent(postDTO.getContent());
        post.setCreatedDate(new Date());
        post.setUser(user);
        post.setCreateBy(user.getFirstName() + " " + user.getLastName());
+       post.setLocation(location);
        return postRepository.save(post);
     }
 
@@ -102,12 +106,7 @@ public class PostsService implements IPostsService {
     public void deletePost(long id) {
         Post post = postRepository.findById(id).orElseThrow(()
         -> new DataNotFoundException("cannot find post with id = " + id));
-        List<Picture> pictures = pictureRepository.findByPostId(id);
-        for (Picture picture : pictures) {
-            pictureRepository.delete(picture);
-        }
         postRepository.delete(post);
-
     }
 
     @Override

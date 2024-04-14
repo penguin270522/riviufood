@@ -1,6 +1,7 @@
 package com.riviufood.riviu.controller.auth;
 
 import com.riviufood.riviu.dtos.AuthenticationDTO;
+import com.riviufood.riviu.dtos.ProfileDTO;
 import com.riviufood.riviu.dtos.UserDto;
 import com.riviufood.riviu.model.User;
 import com.riviufood.riviu.service.auth.AuthenticationService;
@@ -30,5 +31,11 @@ public class AuthController {
     ){
         AuthenticationDTO authenticationDTO = authService.login(request);
         return ResponseEntity.ok(authenticationDTO);
+    }
+
+    @GetMapping("/me")
+    public ProfileDTO profileDTO(){
+        ProfileDTO profileDTO = authService.profileUser();
+        return profileDTO;
     }
 }

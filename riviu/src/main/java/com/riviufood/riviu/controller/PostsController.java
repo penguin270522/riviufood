@@ -21,8 +21,9 @@ public class PostsController {
     }
 
 
-    @PostMapping
+    @PostMapping("/{postId}")
     public ResponseEntity<?> createPost (
+            @PathVariable long postId,
             @RequestBody PostDTO postDTO,
             BindingResult result){
         try{
@@ -33,7 +34,7 @@ public class PostsController {
                         .toList();
                 return ResponseEntity.badRequest().body(erroMessage);
             }
-            Post post = postService.createPosts(postDTO);;
+            Post post = postService.createPosts(postDTO, postId);;
 
             return ResponseEntity.ok().body(post);
         }catch (Exception e){

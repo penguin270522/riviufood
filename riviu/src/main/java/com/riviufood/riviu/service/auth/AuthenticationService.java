@@ -2,6 +2,7 @@ package com.riviufood.riviu.service.auth;
 
 import com.riviufood.riviu.components.JwtTokenUtil;
 import com.riviufood.riviu.dtos.AuthenticationDTO;
+import com.riviufood.riviu.dtos.ProfileDTO;
 import com.riviufood.riviu.dtos.UserDto;
 import com.riviufood.riviu.model.Collections;
 import com.riviufood.riviu.model.Role;
@@ -32,39 +33,6 @@ public class AuthenticationService implements IUserService {
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
 
-
-
- /*   public AuthenticationDTO register(UserDto request){
-        User user = new User();
-        Collections collections = new Collections();
-        user.setUsername(request.getName());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        Role role = roleRepository.findByCode("ROLE_USER");
-        user.setRole(role);
-        user.setEmail(request.getEmail());
-        user = repository.save(user);
-        collections.setUser(user);
-        collectionRepository.save(collections);
-        user.setCollections(collections);
-        repository.save(user);
-        String token = jwtService.generateToken(user);
-        return new AuthenticationDTO(token);
-    }
-
-    public AuthenticationDTO authenticate(UserDto request){
-        User user = new User();
-        user.setUsername(request.getName());
-        user.setPassword(request.getPassword());
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        user.getUsername(),
-                        user.getPassword()
-                )
-        );
-        user = repository.findByUsername(user.getUsername()).orElseThrow();
-        String token = jwtService.generateToken(user);
-        return new AuthenticationDTO(token);
-    }*/
 
 
     @Override
@@ -104,4 +72,19 @@ public class AuthenticationService implements IUserService {
         String token = jwtTokenUtil.generateToken(existingUser);
         return new AuthenticationDTO(token);
     }
+
+    @Override
+    public ProfileDTO profileUser() {
+        User user = ProfileService.getLoggedInUser();
+        ProfileDTO profileDTO = new ProfileDTO();
+        profileDTO.setId(user.getId());
+        profileDTO.setName(user.getUsername());
+        profileDTO.setEmail(user.getEmail());
+        profileDTO.setRole(user.getRole().getCode());
+        profileDTO.setCountPost(user.countPost());
+        profileDTO.setCountLocation(user.countLocation());
+        return profileDTO;
+    }
+
+
 }

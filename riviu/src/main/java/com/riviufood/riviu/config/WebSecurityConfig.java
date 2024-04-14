@@ -25,53 +25,6 @@ public class WebSecurityConfig {
     private final UserService userDetailsServiceImp;
     private final WebJwtAuthenticationFilter jwtAuthenticationFilter;
     private  final CutomAccessDeniedHandler accessDeniedHandler;
-
-
- /*   @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .cors(customCors -> {
-                    CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowCredentials(true);
-                    corsConfiguration.addAllowedOriginPattern("*"); // Sử dụng allowedOriginPatterns thay vì allowedOrigins
-                    corsConfiguration.addAllowedMethod("*");
-                    corsConfiguration.addAllowedHeader("*");
-                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                    source.registerCorsConfiguration("/**", corsConfiguration);
-                    customCors.configurationSource(source);
-                })
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        req -> req.requestMatchers( "/api/auth/login/**",
-                                                    "/api/auth/register/**",
-                                                    "/location/all/**",
-                                                    "location/**",
-                                                    "picture/location/"
-                                        )
-                                .permitAll()
-                                .anyRequest().authenticated()
-                )
-                .userDetailsService(userDetailsServiceImp)
-                *//*.exceptionHandling(e -> e.accessDeniedHandler(accessDeniedHandler)
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))*//*
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Thay đổi ở đây
-                .build();
-    }*/
-
-
- /*   @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }*/
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
@@ -83,14 +36,15 @@ public class WebSecurityConfig {
                                     "api/auth/login",
                                     "api/auth/register",
                                     "posts/postall",
-                                    "location/all"
-                            )
-                            .permitAll()
+                                    "location/all",
+                                    "location",
+                                    "/review/all"
+                            ).permitAll()
+                            .requestMatchers(HttpMethod.GET,"review/**").permitAll()
                             /*.requestMatchers(HttpMethod.POST,"posts").hasRole("ADMIN")*/
                             .anyRequest().authenticated();
                 })
                 .csrf(AbstractHttpConfigurer::disable);
-
         return http.build();
     }
 }

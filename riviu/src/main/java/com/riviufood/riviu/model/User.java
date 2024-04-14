@@ -49,13 +49,13 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "collection_id")
+    @JoinColumn(name = "collection_id", referencedColumnName = "id")
     private Collections collections;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER, cascade = CascadeType.ALL) //fetch
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Post> post = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -73,10 +73,6 @@ public class User implements UserDetails {
         authorities.add(new SimpleGrantedAuthority(getRole().getCode()));
         return authorities;
     }
-
-
-
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -95,5 +91,19 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public int countPost(){
+        if(post != null){
+            return post.size();
+        }
+        return 0;
+    }
+
+    public int countLocation(){
+        if(locations != null){
+            return locations.size();
+        }
+        return 0;
     }
 }

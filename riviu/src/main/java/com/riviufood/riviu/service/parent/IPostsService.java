@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 public interface IPostsService {
     void savePost(PostDTO postDTO);
-    Post createPosts(PostDTO postDTO);
+    Post createPosts(PostDTO postDTO, long post_id);
     Post getPostById(Long postId) throws DataNotFoundException;
     Page<Post> getAllPost(PageRequest pageRequest);
     Post updatePost(Long id, PostDTO postDTO);

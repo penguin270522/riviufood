@@ -2,11 +2,11 @@ package com.riviufood.riviu.service;
 
 import com.riviufood.riviu.converter.LocationConverter;
 import com.riviufood.riviu.dtos.LocationDTO;
+import com.riviufood.riviu.dtos.ResponseMessage;
 import com.riviufood.riviu.exception.DataNotFoundException;
-import com.riviufood.riviu.model.Area;
-import com.riviufood.riviu.model.Location;
-import com.riviufood.riviu.model.User;
+import com.riviufood.riviu.model.*;
 import com.riviufood.riviu.repository.LocationRepository;
+import com.riviufood.riviu.repository.PictureRepository;
 import com.riviufood.riviu.service.auth.ProfileService;
 import com.riviufood.riviu.service.parent.ILocationService;
 import org.springframework.stereotype.Service;
@@ -19,14 +19,18 @@ public class LocationService implements ILocationService {
 
     private final LocationRepository locationRepository;
     private final LocationConverter locationConverter;
-
+    private final PictureRepository pictureRepository;
     private final AreaService areaService;
 
+    private final LocationFoodService locationFoodService;
 
-    public LocationService(LocationRepository locationRepository, LocationConverter locationConverter, AreaService areaService) {
+
+    public LocationService(LocationRepository locationRepository, LocationConverter locationConverter, PictureRepository pictureRepository, AreaService areaService, LocationFoodService locationFoodService) {
         this.locationRepository = locationRepository;
         this.locationConverter = locationConverter;
+        this.pictureRepository = pictureRepository;
         this.areaService = areaService;
+        this.locationFoodService = locationFoodService;
     }
 
     @Override
@@ -36,15 +40,24 @@ public class LocationService implements ILocationService {
     }
 
     @Override
-    public Location createLocation(LocationDTO locationDTO, long areaId) {
-        Area area = areaService.findById(areaId);
-        Location location = locationConverter.convertDtoToEntity(locationDTO);
-        User user = ProfileService.getLoggedInUser();
-        location.setCreateBy(user.getFirstName() + " - " + user.getLastName());
-        location.setUser(user);
-        location.setArea(area);
-        location.setCreatedDate(new Date());
-        return locationRepository.save(location);
+    public LocationDTO createLocation(LocationDTO locationDTO) {
+       try{
+           Area area = areaService.findById(locationDTO.getArea_id());
+           LocationFood locationFood = locationFoodService.findById(locationDTO.getLocationFood_id());
+           Location location = locationConverter.convertDtoToEntity(locationDTO);
+           User user = ProfileService.getLoggedInUser();
+           location.setCreateBy(user.getUsername());
+           location.setUser(user);
+           location.setArea(area);
+           location.setLocationFood(locationFood);
+           location.setWatchWord(locationDTO.getWatch_word());
+           location.setCreatedDate(new Date());
+           locationRepository.save(location);
+           locationDTO.setId(location.getId());
+           return locationDTO;
+       }catch (Exception e){
+           throw new RuntimeException("Failed to create location: " + e.getMessage(), e);
+       }
     }
 
 
@@ -73,5 +86,38 @@ public class LocationService implements ILocationService {
             results.add(locationDTO);
         }
         return results;
+    }
+
+    @Override
+    public void deleteLocationById(long id) {
+        Location location = findById(id);
+        if(location != null){
+            locationRepository.delete(location);
+        }
+    }
+
+    @Override
+    public void deleteLocation(long id) {
+        Location location = findById(id);
+        locationRepository.delete(location);
+    }
+
+    @Override
+    public ResponseMessage updateLocation(Long id, LocationDTO locationDTO) {
+        Location location = findById(id);
+        LocationFood locationFood = locationFoodService.findById(locationDTO.getLocationFood_id());
+        Area area = areaService.findById(locationDTO.getArea_id());
+        location.setName(locationDTO.getName());
+        location.setLocationFood(locationFood);
+        location.setArea(area);
+        location.setWatchWord(locationDTO.getWatch_word());
+        location.setAddress(locationDTO.getAddress());
+        location.setNumberPhone(locationDTO.getNumberPhone());
+        location.setOpenTime(locationDTO.getOpenTime());
+        location.setCloseTime(locationDTO.getCloseTime());
+        location.setLowestPrince(locationDTO.getLowestPrince());
+        location.setHighestPrince(locationDTO.getHighestPrince());
+        locationRepository.save(location);
+        return ResponseMessage.success();
     }
 }

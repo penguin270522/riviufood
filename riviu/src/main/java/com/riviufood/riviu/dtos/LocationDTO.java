@@ -11,14 +11,17 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 public class LocationDTO {
+    private Long id;
 
     private String name;
     private String numberPhone;
-    private Long lowestPrince;
-    private Long highestPrince;
+    private Integer lowestPrince;
+    private Integer highestPrince;
     private String openTime;
     private String closeTime;
     private String address;
-
+    private String watch_word;
+    private Long locationFood_id;
+    private Long area_id;
 
 }
