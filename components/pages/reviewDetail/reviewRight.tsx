@@ -13,15 +13,11 @@ export default function ReviewRight({ reviewDetail }: IProps) {
       <div className="sticky top-[8%]">
         {/* information owner review */}
         <div className="bg-white rounded-xl p-4 shadow-lg ">
-          <Link href={`/user/profile?userId=${reviewDetail?.author._id}`}>
+          <Link href={`/user/profile?userId=${reviewDetail?.author.id}`}>
             <div className="flex items-center gap-4 pb-4">
               <div className="relative h-full w-[20%] aspect-[1/1]">
                 <Image
-                  src={
-                    reviewDetail?.author?.avatar
-                      ? `${baseURL}/users/avatar/${reviewDetail?.author?.avatar}`
-                      : "/avatar.png"
-                  }
+                  src={"/avatar.png"}
                   alt="banner"
                   fill
                   className="object-cover rounded-full"

@@ -34,7 +34,7 @@ export default function ModalUpdateAvatar() {
       setIsLoading(true);
       const formData = new FormData();
       formData.append("avatar", avatar);
-      const { data } = await uploadAvatar(currentUser._id, formData);
+      const { data } = await uploadAvatar(currentUser.id, formData);
 
       dispatch(setUserMe({ ...currentUser, avatar: data.data }));
       dispatch(removeModalType());

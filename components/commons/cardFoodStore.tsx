@@ -24,7 +24,9 @@ export default function CardFoodStore({ cuisine }: IProps) {
       <div className="absolute top-0 left-0 w-full h-full bg-[#00000070] flex items-end p-4">
         <div className="flex flex-col text-white">
           <h2 className="text-xl font-semibold">{cuisine.label}</h2>
-          <p className="text-lg font-medium">{Math.round(Math.random() * 100)} bài viết</p>
+          <p className="text-lg font-medium">
+            {Math.round(Math.random() * 100)} bài viết
+          </p>
         </div>
       </div>
     </Link>

@@ -1,71 +1,64 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import Modal from "./modal";
-import { removeModalType, setModalType } from "@/redux/slices/modalSlice";
-import Image from "next/image";
 import { BtnCommon } from "@/components";
-import { ChangeEvent, useEffect, useState } from "react";
-import { ICreateStore } from "@/utils/interface";
-import { generateTimeOptions } from "@/utils/common";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setDistrict, setNational } from "@/redux/slices/authSlice";
+import { removeModalType, setModalType } from "@/redux/slices/modalSlice";
 import { axiosAuthCookieMultiData } from "@/utils/api";
-import { uploadImagesStore } from "@/utils/proxy";
-import { useRouter } from "next/navigation";
-import { CUISINE_NATIONAL_FOOD, DISTRICTS } from "@/utils/data";
+import { generateTimeOptions } from "@/utils/common";
+import { ICreateStore } from "@/utils/interface";
+import { getDistrictsFromAPI, getNationalFromAPI } from "@/utils/proxy";
 import { showToast } from "@/utils/toastify";
-
-interface IProvice {
-  code: string;
-  name: string;
-  name_with_type: string;
-  slug: string;
-  type: string;
-}
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, useEffect, useState } from "react";
+import Modal from "./modal";
+import axios from "axios";
 
 export default function ModalStore() {
   const { typeModal } = useAppSelector((state) => state.modal);
-  const [provinces, setProvinces] = useState<IProvice[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [imgsBlob, setImgsBlob] = useState<string[]>([]);
-
   const { currentUser } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
-
+  const [imgsBlob, setImgsBlob] = useState<string[]>([]);
   const [storeData, setStoreData] = useState<ICreateStore>({
     name: "",
-    slogan: "",
-    cuisine_national: "",
-    open_time: "08:00",
-    close_time: "08:00",
+    watch_word: "",
+    locationFood_id: 1,
+    openTime: "08:00",
+    closeTime: "08:00",
     address: "",
-    phone_number: "",
-    images: null as any,
-    price_lowest: "",
-    price_highest: "",
-    province: "",
+    numberPhone: "",
+    //images: null as any,
+    lowestPrince: "",
+    highestPrince: "",
+    area_id: 1,
   });
 
   const router = useRouter();
+  // const isFormValid = () => {
+  //   // Kiểm tra tất cả các trường dữ liệu có giá trị không rỗng
+  //   for (const key in storeData) {
+  //     if (!storeData[key as keyof typeof storeData]) {
+  //       console.log(key);
 
-  const isFormValid = () => {
-    // Kiểm tra tất cả các trường dữ liệu có giá trị không rỗng
-    for (const key in storeData) {
-      if (!storeData[key as keyof typeof storeData]) {
-        console.log(key);
+  //       return false;
+  //     }
+  //   }
 
-        return false;
-      }
-    }
-
-    return true;
-  };
+  //   return true;
+  // };
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
+    const { name, value } = e.target;
+    const convertedValue =
+      name === "lowestPrince" || name === "highestPrince"
+        ? parseInt(value, 10) // Chuyển đổi giá trị sang số nguyên
+        : value; // Giữ nguyên giá trị cho các trường khác
     setStoreData({
       ...storeData,
-      [e.target.name]: e.target.value,
+      [name]: convertedValue,
     });
   };
 
@@ -79,95 +72,100 @@ export default function ModalStore() {
     if (files) {
       setStoreData({
         ...storeData,
-        images: files,
+        //images: files,
       });
     }
   };
+  const { currentDistrict, currentNational, access_token } = useAppSelector(
+    (state) => state.auth
+  );
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // Kiểm tra xem có dữ liệu trong localStorage không
-    const storedProvinces = localStorage.getItem("provinces");
-
-    if (storedProvinces) {
-      // Nếu có, sử dụng dữ liệu từ localStorage
-      setProvinces(JSON.parse(storedProvinces));
-    } else {
-      // Nếu không, gọi API để lấy dữ liệu và lưu vào localStorage
-      const fetchProvinces = async () => {
+    if (access_token && !currentDistrict) {
+      const getDistricts = async () => {
         try {
-          const response = await fetch(
-            "https://api.github.com/repos/madnh/hanhchinhvn/contents/dist/tinh_tp.json"
-          );
-          const data = await response.json();
-          const provincesData = JSON.parse(atob(data.content));
-          setProvinces(Object.values(provincesData));
-
-          // Lưu dữ liệu vào localStorage
-          localStorage.setItem(
-            "provinces",
-            JSON.stringify(Object.values(provincesData))
-          );
+          const District = await getDistrictsFromAPI(access_token);
+          if (District) {
+            dispatch(setDistrict(District));
+          } else {
+            console.log("Không tìm thấy địa điểm nào.");
+          }
         } catch (error) {
-          console.error("Error fetching provinces:", error);
+          console.log("Lỗi khi gửi yêu cầu lấy thông tin địa điểm:", error);
         }
       };
-
-      fetchProvinces();
+      getDistricts();
     }
+  }, [access_token, currentDistrict]);
 
-    return () => {
-      imgsBlob.forEach((img) => {
-        URL.revokeObjectURL(img);
-      });
-    };
-  }, []);
+  useEffect(() => {
+    if (access_token && !currentNational) {
+      const getNationals = async () => {
+        try {
+          const National = await getNationalFromAPI(access_token);
+          if (National) {
+            dispatch(setNational(National));
+            // console.log(National);
+          } else {
+            console.log("Không tìm thấy món ăn nào.");
+          }
+        } catch (error) {
+          console.log("Lỗi khi gửi yêu cầu lấy thông tin món ăn:", error);
+        }
+      };
+      getNationals();
+    }
+  }, [access_token, currentNational]);
+  // console.log(currentNational);
 
   const handleSubmit = async () => {
-    if (!currentUser?._id) {
+    if (!currentUser?.id) {
       showToast("Bạn chưa đăng nhập", "error");
       dispatch(setModalType("LOGIN"));
       return;
     }
 
-    if (!isFormValid()) {
-      showToast("Hãy điền đầy đủ thông tin", "error");
-      return;
-    }
-    const arrImgs = Array.from(storeData.images);
-
-    if (arrImgs.length < 5) {
-      showToast("Hãy chọn ít nhất 5 tấm ảnh", "error");
-      return;
-    }
+    // if (!isFormValid()) {
+    //   showToast("Hãy điền đầy đủ thông tin", "error");
+    //   return;
+    // }
+    //const arrImgs = Array.from(storeData.images);
 
     setIsLoading(true);
     try {
-      const { images, ...newStoreData } = storeData;
+      if (access_token) {
+        console.log(access_token);
+        const { ...newStoreData } = storeData;
+        const headers = {
+          Authorization: `Bearer ${access_token}`,
+        };
 
-      const { data } = await axiosAuthCookieMultiData.post("/stores", {
-        ...newStoreData,
-        owner: currentUser._id,
-      });
+        const { data } = await axios.post(
+          "http://26.177.67.186:8080/location",
+          {
+            ...newStoreData,
+            owner: currentUser.id,
+          },
+          { headers }
+        );
+        // const formData = new FormData();
 
-      const formData = new FormData();
-
-      arrImgs.forEach((file: any) => {
-        formData.append(`images`, file);
-      });
-
-      await uploadImagesStore(data.data._id, formData);
-
-      showToast("Tạo thành công", "success");
-      dispatch(setModalType(null));
-      router.push(`/store/${data.data._id}`);
+        // arrImgs.forEach((file: any) => {
+        //   formData.append(`images`, file);
+        // });
+        console.log(storeData);
+        showToast("Tạo thành công", "success");
+        dispatch(setModalType(null));
+      }
     } catch (error) {
       showToast("Tạo thất bại rồi", "error");
       console.error("Error:", error);
+      // console.log(storeData);
     } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <Modal
       isOpen={typeModal === "CREATE_STORE" ? true : false}
@@ -192,18 +190,20 @@ export default function ModalStore() {
             <div className="w-[200px] text-lg font-medium">Tỉnh thành:</div>
             <label htmlFor="province" className="border rounded-lg p-2 flex-1">
               <select
-                id="province"
-                name="province"
-                value={storeData.province}
+                id="area_id"
+                name="area_id"
+                value={storeData.area_id}
                 onChange={handleInputChange}
                 className="w-full outline-none"
               >
-                <option value="">Chọn quận</option>
-                {DISTRICTS.map((dictrict) => (
-                  <option key={dictrict} value={dictrict}>
-                    {dictrict}
-                  </option>
-                ))}
+                <option value="">Chọn tỉnh</option>
+                {currentDistrict &&
+                  Array.isArray(currentDistrict) &&
+                  currentDistrict.map((district) => (
+                    <option key={district.id} value={district.id}>
+                      {district.value}
+                    </option>
+                  ))}
               </select>
             </label>
           </div>
@@ -219,31 +219,36 @@ export default function ModalStore() {
           {/* phonenumber */}
           <InputStore
             title="Số điện thoại"
-            name="phone_number"
+            name="numberPhone"
             placeholder="Nhập số điện thoại"
-            value={storeData.phone_number}
+            value={storeData.numberPhone}
             handleOnChange={handleInputChange}
           />
 
-          {/* Tỉnh thành */}
+          {/* Món ăn national */}
           <div className="flex items-center w-full py-3">
             <div className="w-[200px] text-lg font-medium">
               Món ăn quốc gia:
             </div>
-            <label htmlFor="province" className="border rounded-lg p-2 flex-1">
+            <label
+              htmlFor="locationFood_id"
+              className="border rounded-lg p-2 flex-1"
+            >
               <select
-                id="cuisine_national"
-                name="cuisine_national"
-                value={storeData.cuisine_national}
+                id="locationFood_id"
+                name="locationFood_id"
+                value={storeData.locationFood_id}
                 onChange={handleInputChange}
                 className="w-full outline-none"
               >
                 <option value="">Chọn món ăn</option>
-                {CUISINE_NATIONAL_FOOD.map((dish) => (
-                  <option key={dish.key} value={dish.key}>
-                    {dish.label}
-                  </option>
-                ))}
+                {currentNational &&
+                  Array.isArray(currentNational) &&
+                  currentNational.map((national) => (
+                    <option key={national.key} value={national.id}>
+                      {national.value}
+                    </option>
+                  ))}
               </select>
             </label>
           </div>
@@ -251,35 +256,35 @@ export default function ModalStore() {
           {/* slogan */}
           <InputStore
             title="Khẩu hiệu"
-            name="slogan"
-            value={storeData.slogan}
+            name="watch_word"
+            value={storeData.watch_word}
             handleOnChange={handleInputChange}
           />
 
           {/* price cao */}
           <InputStore
             title="Giá cao nhất"
-            name="price_highest"
-            value={storeData.price_highest}
+            name="highestPrince"
+            value={storeData.highestPrince}
             handleOnChange={handleInputChange}
           />
           {/* price thấp */}
           <InputStore
             title="Giá thấp nhất"
-            name="price_lowest"
-            value={storeData.price_lowest}
+            name="lowestPrince"
+            value={storeData.lowestPrince}
             handleOnChange={handleInputChange}
           />
           {/* frame times */}
           <div className="flex items-center w-full py-3">
             <div className="w-[200px] text-lg font-medium">Khung giờ:</div>
             <div className="grid grid-cols-2 gap-3 flex-1">
-              {/* open_time */}
-              <label htmlFor="open_time" className="border rounded-lg p-2">
+              {/* openTime */}
+              <label htmlFor="openTime" className="border rounded-lg p-2">
                 <select
-                  id="open_time"
-                  name="open_time"
-                  value={storeData.open_time}
+                  id="openTime"
+                  name="openTime"
+                  value={storeData.openTime}
                   onChange={handleInputChange}
                   className="w-full outline-none"
                 >
@@ -290,12 +295,12 @@ export default function ModalStore() {
                   ))}
                 </select>
               </label>
-              {/* close_time */}
-              <label htmlFor="close_time" className="border rounded-lg p-2">
+              {/* closeTime */}
+              <label htmlFor="closeTime" className="border rounded-lg p-2">
                 <select
-                  id="close_time"
-                  name="close_time"
-                  value={storeData.close_time}
+                  id="closeTime"
+                  name="closeTime"
+                  value={storeData.closeTime}
                   onChange={handleInputChange}
                   className="w-full outline-none"
                 >
@@ -314,7 +319,7 @@ export default function ModalStore() {
         <div className="w-[30%]">
           <h2 className="text-xl font-bold">Hình ảnh đại diện</h2>
           {/* avatar */}
-          <label
+          {/* <label
             htmlFor="images"
             className="cursor-pointer block relative w-[96%] aspect-[1/1] mt-4 rounded-xl border-[3px] border-second border-dashed"
           >
@@ -357,7 +362,7 @@ export default function ModalStore() {
               multiple
               className="hidden"
             />
-          </label>
+          </label> */}
         </div>
       </div>
       <div className="border-t flex w-full justify-end pt-3">

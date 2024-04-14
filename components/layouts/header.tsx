@@ -3,7 +3,7 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setUserMe } from "@/redux/slices/authSlice";
 import { setModalType } from "@/redux/slices/modalSlice";
-import { getToken } from "@/utils/proxy";
+import { getCurrentUser } from "@/utils/proxy";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,32 +11,28 @@ import { useEffect } from "react";
 import { BtnCommon, UserHeader } from "..";
 
 export default function Header() {
+  const router = useRouter();
   const { currentUser, access_token } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
-  const router = useRouter();
-
   useEffect(() => {
-    const email ="";
-    const name="";
-    const id="";
-    if (access_token && !currentUser?._id) {
+    if (access_token && !currentUser) {
       const getUser = async () => {
         try {
-          const userData = await getToken(email, name, id);
+          const userData = await getCurrentUser(access_token);
           if (userData) {
             dispatch(setUserMe(userData));
-            console.log("Dữ liệu nhận được:", userData);
           } else {
             console.log("Không tìm thấy thông tin người dùng.");
           }
         } catch (error) {
-          console.log("Lỗi:", error);
+          console.log("Lỗi khi gửi yêu cầu lấy thông tin người dùng:", error);
         }
       };
       getUser();
     }
   }, [access_token, currentUser]);
+  //console.log(currentUser);
   const handleOpenModalSearch = () => {
     dispatch(setModalType("SEARCH_STORE"));
   };
@@ -73,13 +69,15 @@ export default function Header() {
             </div>
           </div>
 
-          {currentUser?._id ? (
+          {currentUser ? (
             <>
-              {/* <BtnCommon
-                title="Viết Riviu"
-                commonStyles=""
-                handleClick={() => router.push("/review")}
-              /> */}
+              {
+                <BtnCommon
+                  title="Viết Riviu"
+                  commonStyles=""
+                  handleClick={() => router.push("/review")}
+                />
+              }
               <BtnCommon
                 title="Thêm Địa Điểm"
                 commonStyles=""

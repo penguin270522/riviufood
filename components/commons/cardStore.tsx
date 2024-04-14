@@ -10,17 +10,17 @@ interface IProps {
 export default function CardStore({ store }: IProps) {
   return (
     <Link
-      href={`/store/${store._id}`}
+      href={`/store/${store.id}`}
       className="overflow-hidden rounded-lg shadow-md group cursor-pointer border-[2px] hover:border-primary"
     >
       {/* image */}
       <div className="relative h-[150px] overflow-hidden">
-        <Image
-          src={`${baseURL}/stores/image/${store._id}/${store.images[0]}`}
+        {/* <Image
+          src={`${baseURL}/stores/image/${store.id}/${store.images[0]}`}
           alt="banner"
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
-        />
+        /> */}
       </div>
       {/* body */}
       <div className="p-2">

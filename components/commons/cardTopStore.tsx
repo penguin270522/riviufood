@@ -9,10 +9,10 @@ interface IProps {
 
 export default function CardTopStore({ store }: IProps) {
   return (
-    <Link href={`/store/${store._id}`} className="p-3 flex gap-2 hover:bg-input transition-colors rounded-xl cursor-pointer shadow-sm">
+    <Link href={`/store/${store.id}`} className="p-3 flex gap-2 hover:bg-input transition-colors rounded-xl cursor-pointer shadow-sm">
       <div className="relative h-full w-[30%] aspect-[1/1]">
         <Image
-          src={`${baseURL}/stores/image/${store._id}/${store?.images[0]}`}
+          src={`${baseURL}/stores/image/${store.id}/${store?.images[0]}`}
           alt="banner"
           fill
           className="object-cover rounded-full"

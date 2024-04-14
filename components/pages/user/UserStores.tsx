@@ -19,7 +19,7 @@ export default function UserStores() {
   const { currentUser } = useAppSelector((state) => state.auth);
 
   const searchParams = useSearchParams();
-  const userId = searchParams.get("uid") ?? currentUser?._id;
+  const userId = searchParams.get("uid") ?? currentUser?.id;
 
   useEffect(() => {
     const getUser = async () => {
@@ -65,7 +65,7 @@ function Card({ store }: ICard) {
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      await deleteStoreById(store._id);
+      await deleteStoreById(store.id);
       showToast("Xoá thành công");
     } catch (error) {
       showToast("Không thể xoá", "error");
@@ -86,12 +86,12 @@ function Card({ store }: ICard) {
   return (
     <>
       <Link
-        href={`/store/${store._id}`}
+        href={`/store/${store.id}`}
         className="relative flex gap-4 border shadow-md p-4 rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
       >
         <div className="h-[150px] w-[150px] relative">
           <Image
-            src={`${baseURL}/stores/image/${store._id}/${store.images[0]}`}
+            src={`${baseURL}/stores/image/${store.id}/${store.images[0]}`}
             alt="post"
             fill
             className="object-cover rounded-xl"

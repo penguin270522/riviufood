@@ -80,16 +80,16 @@ interface ICardSearch {
 function CardSearch({ store }: ICardSearch) {
   return (
     <Link
-      href={`/store/${store?._id}`}
+      href={`/store/${store?.area_id}`}
       className="flex gap-4 hover:bg-slate-200 cursor-pointer transition-all p-2 max-h-[190px] h-full"
     >
       <div className="aspect-[1/1] w-[26%] relative">
-        <Image
-          src={`${baseURL}/stores/image/${store?._id}/${store?.images[0]}`}
+        {/* <Image
+          src={`${baseURL}/stores/image/${store?.area_id}/${store?.images[0]}`}
           alt="banner"
           fill
           className="object-cover"
-        />
+        /> */}
       </div>
       <div>
         <h3 className="text-2xl text-txt-primary font-semibold line-clamp-1">
@@ -105,7 +105,7 @@ function CardSearch({ store }: ICardSearch) {
           <div className="flex gap-3 text-lg text-txt-primary font-medium my-2">
             <Image src="/dolar.svg" alt="star_icon" width={20} height={20} />
             <p>
-              {store?.price_lowest} VND - {store?.price_highest} VND
+              {store?.lowestPrince} VND - {store?.highestPrince} VND
             </p>
           </div>
           {/* time infor */}
@@ -113,7 +113,7 @@ function CardSearch({ store }: ICardSearch) {
             <Image src="/time.svg" alt="star_icon" width={20} height={20} />
             <span className="text-second">Đang mở cửa</span>
             <span>
-              ({store?.close_time} - {store?.open_time})
+              ({store?.closeTime} - {store?.openTime})
             </span>
           </div>
         </div>

@@ -107,7 +107,8 @@ export default function Profile() {
           <div className="flex justify-between items-center">
             <div className="flex gap-4 mt-6 mb-3 items-center">
               <div className="text-lg">
-                <span className="font-medium text-xl">1</span> bài viết
+                <span className="font-medium text-xl">1</span>
+bài viết
               </div>
               <div className="text-lg">
                 <span className="font-medium text-xl">0</span> người theo dõi

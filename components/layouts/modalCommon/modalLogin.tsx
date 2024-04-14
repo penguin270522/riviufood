@@ -6,16 +6,18 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { removeModalType, setModalType } from "@/redux/slices/modalSlice";
 import Image from "next/image";
 import { useState } from "react";
-import { userLogin as userLoginApi } from "@/utils/proxy";
-import { setCurrentUserLogin } from "@/redux/slices/authSlice";
+import { getCurrentUser, userLogin as userLoginApi } from "@/utils/proxy";
+import { setCurrentUserLogin, setUserMe } from "@/redux/slices/authSlice";
 import { saveAuthToken } from "@/utils/api";
 import { showToast } from "@/utils/toastify";
+import { IUser } from "@/utils/interface";
 
 export default function ModalLogin() {
   const [userLogin, setUserLogin] = useState({
     name: "",
     password: "",
   });
+  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -38,21 +40,29 @@ export default function ModalLogin() {
         return;
       }
       const { data } = await userLoginApi(name, password);
-
-      localStorage.setItem("token", data.token);
-
-      dispatch(
-        setCurrentUserLogin({
-          access_token: data.token,
-          user: data.user,
-        })
-      );
-      saveAuthToken(data.token);
-
-      dispatch(removeModalType());
-      showToast("Đăng nhập thành công");
+      const token = data.token;
+      localStorage.setItem("token", token);
+      if (data.token) {
+        console.log("Đăng nhập thành công");
+        // Gửi yêu cầu để lấy thông tin người dùng sau khi đăng nhập thành công
+        const userData = await getCurrentUser(token);
+        //console.log("Token người dùng nhận được:", token);
+        if (userData) {
+          dispatch(setUserMe(userData));
+          console.log("Dữ liệu người dùng nhận được:", userData);
+          setCurrentUser(userData);
+        } else {
+          console.log("Không thể nhận được dữ liệu người dùng.");
+        }
+        console.log("currentUser sau khi cập nhật:", currentUser);
+        saveAuthToken(data.token);
+        dispatch(removeModalType());
+        showToast("Đăng nhập thành công");
+      } else {
+        console.log("Không nhận được phản hồi");
+      }
     } catch (error) {
-      console.log("error : ", error);
+      console.log("Lỗi:", error);
       showToast("Hãy kiểm tra lại email và mật khẩu");
     } finally {
       setIsLoading(false);

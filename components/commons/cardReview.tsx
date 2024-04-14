@@ -24,7 +24,7 @@ export default function CardReview({ review }: IProps) {
     }
 
     try {
-      await likeReview(review._id, currentUser._id);
+      await likeReview(review.id, currentUser.id);
       showToast("Thay đổi trạng thái thành công", "success");
       router.refresh();
     } catch (error) {
@@ -37,11 +37,7 @@ export default function CardReview({ review }: IProps) {
       {/* title */}
       <div className="flex gap-3">
         <Image
-          src={
-            review?.author?.avatar
-              ? `${baseURL}/users/avatar/${review?.author?.avatar}`
-              : "/avatar_1.png"
-          }
+          src={"/avatar_1.png"}
           alt="avatar"
           width={60}
           height={40}
@@ -75,7 +71,7 @@ export default function CardReview({ review }: IProps) {
         {review.images.slice(0, 5).map((image, index) => (
           <Img
             key={index}
-            src={`${baseURL}/reviews/image/${review._id}/${image}`}
+            src={`${baseURL}/reviews/image/${review.id}/${image}`}
           />
         ))}
         {
@@ -91,7 +87,7 @@ export default function CardReview({ review }: IProps) {
 
       <div className="flex items-center gap-6">
         <div className="flex gap-2 items-center" onClick={handleLikeReviewPost}>
-          {currentUser && review.favourities.includes(currentUser?._id) ? (
+          {currentUser && review.favourities.includes(currentUser?.id) ? (
             <Image
               src="/heart_red.svg"
               alt="/heart_red.svg"
@@ -109,10 +105,12 @@ export default function CardReview({ review }: IProps) {
             />
           )}
 
-          <span className="text-lg font-medium">{review.favourities.length}</span>
+          <span className="text-lg font-medium">
+            {review.favourities.length}
+          </span>
         </div>
         <Link
-          href={`/review/${review._id}`}
+          href={`/review/${review.id}`}
           className="rounded-full p-1 hover:shadow-xl group transition-shadow"
         >
           <Image

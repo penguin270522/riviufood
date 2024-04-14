@@ -1,6 +1,13 @@
 import { saveAuthToken } from "@/utils/api";
 import { getCookie, removeCookie, setCookie } from "@/utils/common";
-import { IUser } from "@/utils/interface";
+import {
+  IDistrict,
+  ILocationReview,
+  INational,
+  IReview,
+  IStore,
+  IUser,
+} from "@/utils/interface";
 import { createSlice } from "@reduxjs/toolkit";
 
 const authSlice = createSlice({
@@ -10,6 +17,10 @@ const authSlice = createSlice({
     isLoading: false,
     error: null,
     currentUser: null as IUser | null,
+    currentDistrict: null as IDistrict | null,
+    currentNational: null as INational | null,
+    currentLocationReview: null as ILocationReview | null,
+    currentNationalReview: null as IStore | null,
   },
   reducers: {
     userLogout: (state) => {
@@ -25,16 +36,31 @@ const authSlice = createSlice({
     },
     setCurrentUserLogin: (
       state,
-      action: { type: string; payload: { access_token: string; user: IUser } }
+      action: {
+        type: string;
+        payload: { access_token: string; currentUser: IUser };
+      }
     ) => {
       state.access_token = action.payload.access_token;
-      state.currentUser = action.payload.user;
+      state.currentUser = action.payload.currentUser;
     },
     setUserMe: (state, action) => {
       state.currentUser = action.payload;
     },
+    setFoodStore: (state, action) => {
+      state.currentUser = action.payload;
+    },
+    setDistrict: (state, action) => {
+      state.currentDistrict = action.payload;
+    },
+    setNational: (state, action) => {
+      state.currentNational = action.payload;
+    },
     setToken: (state, action) => {
       state.access_token = action.payload;
+    },
+    setReviews: (state, action) => {
+      state.currentLocationReview = action.payload;
     },
     currentUserLogOut: (state) => {
       removeCookie("access_token");
@@ -53,5 +79,9 @@ export const {
   currentUserLogOut,
   setCurrentUserLogin,
   setUserMe,
+  setDistrict,
+  setNational,
+  setFoodStore,
+  setReviews,
 } = authSlice.actions;
 export default authSlice.reducer;

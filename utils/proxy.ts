@@ -6,28 +6,60 @@ import axios from "axios";
 export const getUserById = async (userId: string) => {
   return await axiosAuthCookie.get(`/api/auth/${userId}`);
 };
-
-export const getToken = async (
-  email: string,
-  name: string,
-  id: string
-) => {
+export const getDistrictsFromAPI = async (token: string) => {
   try {
-    const response = await axios.post(
-      "http://26.177.67.186:8080/api/auth/login",
-      {
-        email: email,
-        name: name,
-        id: id,
-      }
-    );
+    const response = await axios.get("http://26.177.67.186:8080/area", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    return response.data.token;
+    return response.data;
   } catch (error) {
-    console.error("Lỗi:", error);
-    return null;
+    console.error("Lỗi khi lấy danh sách các quận từ API:", error);
+    return []; // Trả về mảng rỗng trong trường hợp có lỗi
   }
 };
+
+export const getNationalFromAPI = async (token: string) => {
+  try {
+    const response = await axios.get("http://26.177.67.186:8080/review/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách các món từ API:", error);
+    return []; // Trả về mảng rỗng trong trường hợp có lỗi
+  }
+};
+
+export const getCurrentUser = async (token: string) => {
+  try {
+    const response = await axios.get("http://26.177.67.186:8080/api/auth/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error:", error);
+    return undefined;
+  }
+};
+
+export const getCurrentFoodStore = async (token: string) => {
+  try {
+    const response = await axios.get("http://26.177.67.186:8080/review", {});
+    return response.data;
+  } catch (error) {
+    console.error("Error:", error);
+    return []; // Trả về mảng rỗng trong trường hợp có lỗi
+  }
+};
+
 export const userLogin = async (name: string, password: string) => {
   return await axiosNonAuth.post("/api/auth/login", {
     name,
@@ -60,7 +92,7 @@ export const uploadImagesReview = async (
   formData: FormData
 ) => {
   return await axiosAuthCookieMultiData.post(
-    `/reviews/upload/${reviewId}`,
+    `/review/upload/${reviewId}`,
     formData
   );
 };
@@ -83,7 +115,7 @@ export const uploadAvatar = async (userId: string, formData: FormData) => {
 };
 
 export const getReviewById = async (reviewId: string) => {
-  return await axiosNonAuth.get(`/reviews/${reviewId}/detail`);
+  return await axiosNonAuth.get(`/review/${reviewId}/detail`);
 };
 
 export const createComment = async (reviewId: string, body: ICreateComment) => {
@@ -91,7 +123,7 @@ export const createComment = async (reviewId: string, body: ICreateComment) => {
 };
 
 export const getUserReviews = async (userId: string) => {
-  return await axiosAuthCookie.get(`/reviews/${userId}/me`);
+  return await axiosAuthCookie.get(`/review/${userId}/me`);
 };
 
 export const getUserStores = async (userId: string) => {
@@ -106,13 +138,22 @@ export const getTopUsersReviews = async () => {
   return await axiosAuthCookie.get(`/posts/postall`);
 };
 
-export const getReviewsByNational = async (
-  national: string,
-  rating: string
-) => {
-  return await axiosAuthCookie.get(
-    `/reviews/${national}/post?${rating ? `rating=${rating}` : ""}`
-  );
+export const getReviewsByNational = async (token: string, national: string) => {
+  try {
+    const response = await axios.get(
+      `http://26.177.67.186:8080/review/${national}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách các bài viết:", error);
+    return [];
+  }
 };
 
 export const likeReview = async (reviewId: string, userId: string) => {

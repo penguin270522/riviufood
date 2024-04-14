@@ -1,9 +1,6 @@
 import { CardTopReview, CardTopStore } from "@/components/commons";
-import CardOutstanding from "@/components/commons/cardOutstanding";
-import CardUserOutstanding from "@/components/commons/cardUserStanding";
 import LoadingScreen from "@/components/commons/loading";
 import { useAppSelector } from "@/redux/hooks";
-import { baseURL } from "@/utils/api";
 import { IStore, IUser } from "@/utils/interface";
 import { getTopStores, getTopUsersReviews } from "@/utils/proxy";
 import Image from "next/image";
@@ -47,11 +44,7 @@ export default function HomeRight() {
               <div className="flex items-center gap-4 pb-4">
                 <div className="relative h-full w-[20%] aspect-[1/1]">
                   <Image
-                    src={
-                      currentUser?.avatar
-                        ? `${baseURL}/users/avatar/${currentUser?.avatar}`
-                        : "/avatar_1.png"
-                    }
+                    src={"/avatar_1.png"}
                     alt="banner"
                     fill
                     className="object-cover rounded-full"
@@ -69,7 +62,7 @@ export default function HomeRight() {
                 <div className="flex items-center justify-center gap-4">
                   <div className="text-center text-xl ">
                     <div className="text-txt-primary font-semibold">
-                      {currentUser.totalReviews}
+                      {currentUser.countPost}
                     </div>
                     <p className="text-txt-second font-medium">Bài viết</p>
                   </div>

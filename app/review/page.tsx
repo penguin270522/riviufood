@@ -78,7 +78,7 @@ export default function WriteReview() {
   };
 
   const handleSubmit = async () => {
-    if (!currentUser?._id) {
+    if (!currentUser?.id) {
       showToast("Bạn chưa đăng nhập", "error");
       dispatch(setModalType("LOGIN"));
       return;
@@ -101,7 +101,7 @@ export default function WriteReview() {
       const { data } = await axiosNonAuth.post("/reviews", {
         ...newReviewData,
         store: storeId,
-        author: currentUser._id,
+        author: currentUser.id,
       });
 
       const formData = new FormData();

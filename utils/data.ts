@@ -1,8 +1,8 @@
 export const CUISINE_NATIONAL_FOOD = [
-  { key: "vietnamese", label: "Món Việt" },
+  { key: "vietnam", label: "Món Việt" },
   { key: "korean", label: "Món Hàn" },
-  { key: "japanese", label: "Món Nhật" },
-  { key: "chinese", label: "Món Trung" },
+  { key: "japane", label: "Món Nhật" },
+  { key: "China", label: "Món Trung" },
   { key: "german", label: "Món Đức" },
   { key: "french", label: "Món Pháp" },
 ];

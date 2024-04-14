@@ -31,11 +31,11 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
 
   const totalRating = reviewDetail?.rating
     ? (reviewDetail?.rating.food_safety +
-      reviewDetail?.rating.price +
-      reviewDetail?.rating.serve +
-      reviewDetail?.rating.smell +
-      reviewDetail?.rating.space) /
-    5
+        reviewDetail?.rating.price +
+        reviewDetail?.rating.serve +
+        reviewDetail?.rating.smell +
+        reviewDetail?.rating.space) /
+      5
     : 0;
 
   const handleNextImg = () => {
@@ -62,7 +62,7 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
     setIsLoading(true);
     try {
       const { data } = await createComment(reviewId, {
-        author: currentUser?._id,
+        author: currentUser?.id,
         content: contentCommen,
       });
       const comment = data.data as IComment;
@@ -93,7 +93,7 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
     if (!reviewDetail) return;
 
     try {
-      await likeReview(reviewDetail?._id, currentUser._id);
+      await likeReview(reviewDetail?.id, currentUser.id);
       showToast("Thay đổi trạng thái thành công", "success");
       router.refresh();
     } catch (error) {
@@ -107,15 +107,11 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
       <div className="flex gap-5 items-center">
         {/* avatar */}
         <Link
-          href={`/user/profile?uid=${reviewDetail?.author?._id}`}
+          href={`/user/profile?uid=${reviewDetail?.author?.id}`}
           className="w-[100px] h-[100px] cursor-pointer relative rounded-full overflow-hidden hover:shadow-lg transition-shadow"
         >
           <Image
-            src={
-              reviewDetail?.author?.avatar
-                ? `${baseURL}/users/avatar/${reviewDetail?.author?.avatar}`
-                : "/avatar_1.png"
-            }
+            src={"/avatar_1.png"}
             alt="arrow_left"
             fill
             className="rounded-full object-cover"
@@ -153,7 +149,7 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
         {/* ảnh store */}
         <div className="w-[60%] aspect-[1/1.3] relative">
           <Image
-            src={`${baseURL}/stores/image/${reviewDetail?.store?._id}/${reviewDetail?.store?.images[indexImgsReview]}`}
+            src={`${baseURL}/stores/image/${reviewDetail?.store?.id}/${reviewDetail?.store?.images[indexImgsReview]}`}
             alt="banner "
             fill
             className="object-contain"
@@ -199,12 +195,12 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
       </div>
 
       {/* link to store */}
-      <Link href={`/store/${reviewDetail?.store?._id}`} className="py-6">
+      <Link href={`/store/${reviewDetail?.store?.id}`} className="py-6">
         <div className="flex gap-4 border rounded-xl p-6 hover:shadow-xl transition-shadow relative">
           {/* banner store */}
           <div className="w-[10%] aspect-[1/1] relative">
             <Image
-              src={`${baseURL}/stores/image/${reviewDetail?.store?._id}/${reviewDetail?.store?.images[0]}`}
+              src={`${baseURL}/stores/image/${reviewDetail?.store?.id}/${reviewDetail?.store?.images[0]}`}
               alt="banner"
               fill
               className="object-cover"
@@ -252,7 +248,7 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
         {/* left */}
         <div className="flex gap-2">
           {currentUser &&
-            reviewDetail?.favourities.includes(currentUser?._id) ? (
+          reviewDetail?.favourities.includes(currentUser?.id) ? (
             <Image
               src="/heart_red.svg"
               alt="/heart_red.svg"
@@ -283,11 +279,7 @@ export default function ReviewLeft({ reviewDetail, updateComments }: IProps) {
       <div className="flex gap-6">
         <div className="w-12 h-12 relative">
           <Image
-            src={
-              currentUser?.avatar
-                ? `${baseURL}/users/avatar/${currentUser?.avatar}`
-                : "/avatar_1.png"
-            }
+            src={"/avatar_1.png"}
             alt="banner"
             fill
             className="object-cover rounded-full"

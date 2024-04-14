@@ -1,30 +1,37 @@
 export interface IUser {
-  _id: string;
-  phone_number: string;
+  id: string;
   name: string;
-  email: string;
   role: string;
-  verify_otp: false;
-  avatar: string;
-  totalReviews: number;
+  email: string;
+  countPost: number;
+  countLocation: number;
+}
+export interface IDistrict {
+  id: string;
+  name: string;
+  value: string;
+}
+export interface INational {
+  id: string;
+  name: string;
+  value: string;
 }
 
 export interface ICreateStore {
   name: string;
-  slogan: string;
-  cuisine_national: string;
-  open_time: string;
-  close_time: string;
+  watch_word: string;
+  locationFood_id: number;
+  openTime: string;
+  closeTime: string;
   address: string;
-  images: FileList;
-  phone_number: string;
-  price_highest: string;
-  price_lowest: string;
-  province: string;
+  numberPhone: string;
+  highestPrince: string;
+  lowestPrince: string;
+  area_id: number;
 }
 
 export interface IReadStore extends ICreateStore {
-  _id: string;
+  id: string;
   owner: IUser;
 }
 
@@ -50,7 +57,7 @@ export interface IReview {
     smell: number;
     food_safety: number;
   };
-  _id: string;
+  id: string;
   author: IUser;
   store: IStore;
   title: string;
@@ -60,9 +67,14 @@ export interface IReview {
   comments: IComment[];
   favourities: string[];
 }
-
+export interface ILocationReview {
+  id: number;
+  name: string;
+  value: string;
+  countLocation: string;
+}
 export interface IStore {
-  _id: string;
+  id: string;
   name: string;
   slogan: string;
   cuisine_national: string;
@@ -98,17 +110,16 @@ export interface ICreateComment {
 
 export interface IStoreRead {
   name: string;
-  slogan: string;
-  cuisine_national: string;
-  open_time: string;
-  close_time: string;
+  watch_word: string;
+  locationFood_id: number;
+  openTime: string;
+  closeTime: string;
   address: string;
-  images: FileList;
-  phone_number: string;
-  price_highest: string;
-  price_lowest: string;
-  province: string;
-  _id: string;
+  //images: FileList;
+  numberPhone: string;
+  highestPrince: string;
+  lowestPrince: string;
+  area_id: number;
 }
 
 export interface IReviewCuisine {
@@ -119,6 +130,6 @@ export interface IReviewCuisine {
   store: IStoreRead;
   title: string;
   content: string;
-  _id: string;
+  id: string;
   created_at: string;
 }

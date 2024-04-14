@@ -4,7 +4,8 @@ import { BtnCommon } from "@/components";
 import { Img } from "@/components/commons";
 import Desc from "@/components/commons/desc";
 import LoadingScreen from "@/components/commons/loading";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setNational, setUserMe } from "@/redux/slices/authSlice";
 import { baseURL } from "@/utils/api";
 import {
   clearAllSearchParams,
@@ -13,7 +14,11 @@ import {
 } from "@/utils/common";
 import { CUISINE_NATIONAL_FOOD } from "@/utils/data";
 import { IReviewCuisine } from "@/utils/interface";
-import { getReviewsByNational, likeReview } from "@/utils/proxy";
+import {
+  getNationalFromAPI,
+  getReviewsByNational,
+  likeReview,
+} from "@/utils/proxy";
 import { showToast } from "@/utils/toastify";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,38 +32,69 @@ export default function ReviewsCuisineNational() {
   const router = useRouter();
 
   const params = useParams();
+  const {
+    currentNationalReview,
+    currentLocationReview,
+    currentUser,
+    access_token,
+  } = useAppSelector((state) => state.auth);
+
   const cuisine_national = params.cuisine_national as string;
   const searchParams = useSearchParams();
   const rating = searchParams.get("rating");
-
-  const { currentUser } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const getReviews = async () => {
-      setIsLoading(true);
-      try {
-        const { data } = await getReviewsByNational(
-          cuisine_national,
-          rating || ""
-        );
-        setReviews(data.data);
-      } catch (error) {
-        showToast("Lỗi", "error");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (access_token && !currentUser) {
+      const getReviews = async () => {
+        setIsLoading(true);
+        try {
+          const LocationData = await getReviewsByNational(
+            access_token,
+            cuisine_national
+          );
+          if (LocationData) {
+            dispatch(setUserMe(LocationData));
+          } else {
+            console.log("Không tìm thấy thông tin bài viết.");
+          }
+          console.log(LocationData);
+        } catch (error) {
+          showToast("Lỗi", "error");
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-    getReviews();
-  }, [rating]);
-
+      getReviews();
+    }
+  }, [currentNationalReview]);
+  useEffect(() => {
+    if (access_token && !currentLocationReview) {
+      const getNationals = async () => {
+        try {
+          const National = await getNationalFromAPI(access_token);
+          if (National) {
+            currentLocationReview == dispatch(setNational(National));
+            //console.log(National);
+          } else {
+            console.log("Không tìm thấy món ăn nào.");
+          }
+        } catch (error) {
+          console.log("Lỗi khi gửi yêu cầu lấy thông tin món ăn:", error);
+        }
+      };
+      getNationals();
+    }
+  }, [currentLocationReview]);
+  console.log(currentLocationReview);
   const handleChangeSearchParams = (key: string, value: string) => {
     const params = updateSearchParams(key, value);
     router.replace(params, { scroll: false });
   };
 
   const handleUpdateListRevew = (userId: string, reviewId: string) => {
-    const review = reviews.find((review) => review._id === reviewId);
+    const review = reviews.find((review) => review.id === reviewId);
 
     const currentUserIsLike = review?.favourities.includes(userId);
 
@@ -73,7 +109,7 @@ export default function ReviewsCuisineNational() {
     }
 
     const updatedReviews = reviews.map((review) => {
-      if (review._id === reviewId) review.favourities = newFavourities;
+      if (review.id === reviewId) review.favourities = newFavourities;
       return review;
     });
 
@@ -86,9 +122,9 @@ export default function ReviewsCuisineNational() {
       return;
     }
 
-    handleUpdateListRevew(currentUser._id, reviewId);
+    handleUpdateListRevew(currentUser.id, reviewId);
     try {
-      await likeReview(reviewId, currentUser._id);
+      await likeReview(reviewId, currentUser.id);
     } catch (error) {
       showToast("Lỗi trong quá trình xử lý", "error");
     }
@@ -117,9 +153,13 @@ export default function ReviewsCuisineNational() {
           {/* detail */}
           <div className="flex flex-col justify-center items-center gap-2 p-6 w-full">
             <div className="flex gap-2">
-              <span className="text-xl font-medium">
-                {reviews.length} bài viết
-              </span>
+              {currentLocationReview ? (
+                <span className="text-xl font-medium">
+                  {currentLocationReview.countLocation} bài viết
+                </span>
+              ) : (
+                <span className="text-xl font-medium">0 bài viết</span>
+              )}
               {" - "}
               <span className="text-xl font-medium">0 địa điểm</span>
             </div>
@@ -216,8 +256,8 @@ function Card({ review, handleLikeReviewPost }: ICard) {
     <div className="bg-white shadow-lg rounded-xl p-4">
       {/* heading */}
       <div className="flex gap-4 items-center">
-        <Link href={`/user/${review.author._id}`}>
-          <Image
+        <Link href={`/user/${review.author.id}`}>
+          {/* <Image
             src={
               review?.author?.avatar
                 ? `${baseURL}/users/avatar/${review?.author?.avatar}`
@@ -227,7 +267,7 @@ function Card({ review, handleLikeReviewPost }: ICard) {
             className="rounded-full"
             width={80}
             height={80}
-          />
+          /> */}
         </Link>
         <div className="">
           <h4 className="text-xl font-semibold">{review.author.name}</h4>
@@ -246,15 +286,12 @@ function Card({ review, handleLikeReviewPost }: ICard) {
       {/* images */}
       <div className="my-4 grid grid-cols-8 gap-2">
         {review.images.slice(0, 8).map((img, ind) => (
-          <Img
-            key={ind}
-            src={`${baseURL}/reviews/image/${review._id}/${img}`}
-          />
+          <Img key={ind} src={`${baseURL}/reviews/image/${review.id}/${img}`} />
         ))}
       </div>
 
       <Link
-        href={`/store/${review.store._id}`}
+        href={`/store/${review.store.area_id}`}
         className="block text-xl font-semibold text-primary py-4 hover:underline cursor-pointer"
       >
         # {review.store.name}
@@ -264,9 +301,9 @@ function Card({ review, handleLikeReviewPost }: ICard) {
       <div className="flex pt-4 gap-6 border-t">
         <div
           className="flex items-center gap-2 cursor-pointer group"
-          onClick={() => handleLikeReviewPost(review._id)}
+          onClick={() => handleLikeReviewPost(review.id)}
         >
-          {currentUser && review.favourities.includes(currentUser?._id) ? (
+          {currentUser && review.favourities.includes(currentUser?.id) ? (
             <Image
               src="/heart_red.svg"
               alt="/heart_red.svg"
@@ -290,7 +327,7 @@ function Card({ review, handleLikeReviewPost }: ICard) {
         </div>
 
         <Link
-          href={`/review/${review._id}`}
+          href={`/review/${review.id}`}
           className="group flex items-center cursor-pointer"
         >
           <Image

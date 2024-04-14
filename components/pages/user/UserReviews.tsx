@@ -19,7 +19,7 @@ export default function UserReviews() {
   const { currentUser } = useAppSelector((state) => state.auth);
 
   const searchParams = useSearchParams();
-  const userId = searchParams.get("uid") ?? currentUser?._id;
+  const userId = searchParams.get("uid") ?? currentUser?.id;
 
   useEffect(() => {
     const getUser = async () => {
@@ -65,7 +65,7 @@ function Card({ review }: ICard) {
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      await deleteReviewById(review._id);
+      await deleteReviewById(review.id);
       showToast("Xoá thành công");
     } catch (error) {
       showToast("Không thể xoá", "error");
@@ -86,12 +86,12 @@ function Card({ review }: ICard) {
   return (
     <>
       <Link
-        href={`/review/${review._id}`}
+        href={`/review/${review.id}`}
         className="relative border rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
       >
         <div className="h-[350px] relative">
           <Image
-            src={`${baseURL}/reviews/image/${review._id}/${review.images[0]}`}
+            src={`${baseURL}/reviews/image/${review.id}/${review.images[0]}`}
             alt="post"
             fill
             className="object-cover"

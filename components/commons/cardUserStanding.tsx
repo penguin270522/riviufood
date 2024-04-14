@@ -13,10 +13,10 @@ export default function CardUserOutstanding() {
       </div>
       <div className="flex justify-center flex-col">
         <h2 className="text-xl text-txt-primary font-semibold line-clamp-1">
-          Nguyển trần phương tuấn
+          Đào Xuân Dũng
         </h2>
         <p className="text-lg text-txt-second font-medium line-clamp-2">
-            hghg@gmail.com.cn
+          Daoxuandung010302@gmai.com
         </p>
       </div>
     </div>

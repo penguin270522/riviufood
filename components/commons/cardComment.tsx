@@ -16,11 +16,7 @@ export default function CardComment({ comment }: IProps) {
         className="relative h-14 w-14 hover:shadow-xl transition-shadow"
       >
         <Image
-          src={
-            comment?.author?.avatar
-              ? `${baseURL}/users/avatar/${comment?.author?.avatar}`
-              : "/avatar_1.png"
-          }
+          src={"/avatar_1.png"}
           alt="avatar"
           fill
           className="object-cover rounded-full"
@@ -33,7 +29,7 @@ export default function CardComment({ comment }: IProps) {
         <div className="flex justify-between">
           <div className="flex gap-2 items-center">
             <Link
-              href={`/user/profile?userId=${comment?.author?._id}`}
+              href={`/user/profile?userId=${comment?.author?.id}`}
               className="text-xl font-semibold transition-colors hover:text-primary"
             >
               {comment?.author?.name}

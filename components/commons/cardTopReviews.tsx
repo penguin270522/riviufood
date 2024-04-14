@@ -10,16 +10,12 @@ interface IProps {
 export default function CardTopReview({ user }: IProps) {
   return (
     <Link
-      href={`/user/profile?uid=${user._id}`}
+      href={`/user/profile?uid=${user.id}`}
       className="p-3 flex gap-2 hover:bg-input transition-colors rounded-xl cursor-pointer shadow-sm"
     >
       <div className="relative h-full w-[30%] aspect-[1/1]">
         <Image
-          src={
-            user?.avatar
-              ? `${baseURL}/users/avatar/${user?.avatar}`
-              : "/avatar_1.png"
-          }
+          src={"/avatar_1.png"}
           alt="banner"
           fill
           className="object-cover rounded-full"
