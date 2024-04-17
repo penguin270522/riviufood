@@ -1,4 +1,4 @@
-package com.riviufood.riviu.controller;
+package com.riviufood.riviu.controller.user;
 
 import com.riviufood.riviu.dtos.CommentDTO;
 import com.riviufood.riviu.model.Comment;

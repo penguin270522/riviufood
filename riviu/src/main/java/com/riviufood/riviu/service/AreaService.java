@@ -1,6 +1,7 @@
 package com.riviufood.riviu.service;
 
 import com.riviufood.riviu.converter.AreaConverter;
+import com.riviufood.riviu.converter.BaseConverter;
 import com.riviufood.riviu.dtos.AreaDTO;
 import com.riviufood.riviu.model.Area;
 import com.riviufood.riviu.repository.AreaRepository;
@@ -14,10 +15,12 @@ import java.util.List;
 public class AreaService implements IAreaService {
     private final AreaRepository areaRepository;
     private final AreaConverter areaConverter;
+    private final BaseConverter baseConverter;
 
-    public AreaService(AreaRepository areaRepository, AreaConverter areaConverter) {
+    public AreaService(AreaRepository areaRepository, AreaConverter areaConverter, BaseConverter baseConverter) {
         this.areaRepository = areaRepository;
         this.areaConverter = areaConverter;
+        this.baseConverter = baseConverter;
     }
 
     @Override
@@ -27,7 +30,7 @@ public class AreaService implements IAreaService {
 
     @Override
     public Area createArea(AreaDTO areaDTO) {
-        Area area = areaConverter.converDTOToEntity(areaDTO);
+        Area area = baseConverter.convertDtoToEntity(areaDTO, Area.class);
         area.setCreatedDate(new Date());
         return areaRepository.save(area);
     }

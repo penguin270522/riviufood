@@ -1,4 +1,4 @@
-package com.riviufood.riviu.controller;
+package com.riviufood.riviu.controller.user;
 
 import com.riviufood.riviu.dtos.AreaDTO;
 import com.riviufood.riviu.model.Area;
@@ -6,6 +6,7 @@ import com.riviufood.riviu.service.AreaService;
 import com.riviufood.riviu.service.parent.IAreaService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class AreaController {
         this.areaService = areaService;
     }
 
-
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> createArea(@RequestBody AreaDTO areaDTO){
         Area area = areaService.createArea(areaDTO);

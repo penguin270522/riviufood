@@ -1,4 +1,4 @@
-package com.riviufood.riviu.controller;
+package com.riviufood.riviu.controller.user;
 
 import com.riviufood.riviu.model.CollectionPost;
 import com.riviufood.riviu.service.CollectionPostService;
@@ -14,6 +14,7 @@ public class CollectionPostController {
     public CollectionPostController(CollectionPostService collectionPostService) {
         this.collectionPostService = collectionPostService;
     }
+
 
     @PostMapping("/{postId}")
     public ResponseEntity<CollectionPost> saveCollectionPost(@PathVariable Long postId){
