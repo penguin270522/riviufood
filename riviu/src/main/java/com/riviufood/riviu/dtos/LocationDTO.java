@@ -1,5 +1,6 @@
 package com.riviufood.riviu.dtos;
 
+import com.riviufood.riviu.enums.Status;
 import jakarta.persistence.Column;
 import lombok.*;
 
@@ -23,5 +24,6 @@ public class LocationDTO {
     private String watch_word;
     private Long locationFood_id;
     private Long area_id;
+    private Status status;
 
 }

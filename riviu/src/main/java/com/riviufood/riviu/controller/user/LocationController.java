@@ -2,6 +2,7 @@ package com.riviufood.riviu.controller.user;
 
 import com.riviufood.riviu.dtos.LocationDTO;
 import com.riviufood.riviu.dtos.ResponseMessage;
+import com.riviufood.riviu.dtos.ReviewDTO;
 import com.riviufood.riviu.exception.DataNotFoundException;
 import com.riviufood.riviu.model.Location;
 import com.riviufood.riviu.service.parent.ILocationService;
@@ -83,5 +84,16 @@ public class LocationController {
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PatchMapping("/review/{id}")
+    public ResponseEntity<ResponseMessage> reviewrLocation(
+            @PathVariable("id") Long locationId,
+            @RequestBody ReviewDTO status)
+    {
+        ResponseMessage response = locationService.reviewrLocation(locationId, status);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+    }
+
 
 }

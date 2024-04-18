@@ -3,13 +3,18 @@ package com.riviufood.riviu.service;
 import com.riviufood.riviu.converter.LocationConverter;
 import com.riviufood.riviu.dtos.LocationDTO;
 import com.riviufood.riviu.dtos.ResponseMessage;
+import com.riviufood.riviu.dtos.ReviewDTO;
+import com.riviufood.riviu.enums.Status;
 import com.riviufood.riviu.exception.DataNotFoundException;
 import com.riviufood.riviu.model.*;
 import com.riviufood.riviu.repository.LocationRepository;
 import com.riviufood.riviu.repository.PictureRepository;
 import com.riviufood.riviu.service.auth.ProfileService;
 import com.riviufood.riviu.service.parent.ILocationService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,11 +54,13 @@ public class LocationService implements ILocationService {
            location.setCreateBy(user.getUsername());
            location.setUser(user);
            location.setArea(area);
+           location.setStatus(Status.PENDING);
            location.setLocationFood(locationFood);
            location.setWatchWord(locationDTO.getWatch_word());
            location.setCreatedDate(new Date());
            locationRepository.save(location);
            locationDTO.setId(location.getId());
+           locationDTO.setStatus(location.getStatus());
            return locationDTO;
        }catch (Exception e){
            throw new RuntimeException("Failed to create location: " + e.getMessage(), e);
@@ -118,6 +125,26 @@ public class LocationService implements ILocationService {
         location.setLowestPrince(locationDTO.getLowestPrince());
         location.setHighestPrince(locationDTO.getHighestPrince());
         locationRepository.save(location);
+        return ResponseMessage.success();
+    }
+
+    @Override
+    public ResponseMessage reviewrLocation(Long locationId, ReviewDTO status) {
+        Location existingLocation = findById(locationId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User reviewer = (User) authentication.getPrincipal();
+        existingLocation.setReviewr(reviewer);
+
+        switch (status.getStatus()) {
+            case APPROVED:
+                existingLocation.setStatus(Status.APPROVED);
+                break;
+            case REJECTED:
+                existingLocation.setRejectedMessage(status.getMessage());
+                existingLocation.setStatus(Status.REJECTED);
+                break;
+        }
+        locationRepository.save(existingLocation);
         return ResponseMessage.success();
     }
 }

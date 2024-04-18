@@ -2,6 +2,7 @@ package com.riviufood.riviu.service.parent;
 
 import com.riviufood.riviu.dtos.LocationDTO;
 import com.riviufood.riviu.dtos.ResponseMessage;
+import com.riviufood.riviu.dtos.ReviewDTO;
 import com.riviufood.riviu.model.Location;
 import org.springframework.stereotype.Service;
 
@@ -25,4 +26,6 @@ public interface ILocationService {
     void deleteLocation(long id);
 
     ResponseMessage updateLocation(Long id, LocationDTO locationDTO);
+
+    ResponseMessage reviewrLocation(Long locationId, ReviewDTO status);
 }

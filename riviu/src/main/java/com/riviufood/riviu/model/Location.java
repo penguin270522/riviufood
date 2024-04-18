@@ -1,6 +1,7 @@
 package com.riviufood.riviu.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.riviufood.riviu.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -58,6 +59,15 @@ public class Location extends BaseEntity{
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Picture> pictures = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @ManyToOne
+    @JoinColumn(name = "reviewr_id")
+    private User reviewr;
+
+    private String rejectedMessage;
 
     public int getTotalEvulate() {
         if (evaluates != null && evaluates.size() > 0) {
