@@ -130,21 +130,25 @@ public class LocationService implements ILocationService {
 
     @Override
     public ResponseMessage reviewrLocation(Long locationId, ReviewDTO status) {
-        Location existingLocation = findById(locationId);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User reviewer = (User) authentication.getPrincipal();
-        existingLocation.setReviewr(reviewer);
+        try{
+            Location existingLocation = findById(locationId);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User reviewer = (User) authentication.getPrincipal();
+            existingLocation.setReviewr(reviewer);
 
-        switch (status.getStatus()) {
-            case APPROVED:
-                existingLocation.setStatus(Status.APPROVED);
-                break;
-            case REJECTED:
-                existingLocation.setRejectedMessage(status.getMessage());
-                existingLocation.setStatus(Status.REJECTED);
-                break;
+            switch (status.getStatus()) {
+                case APPROVED:
+                    existingLocation.setStatus(Status.APPROVED);
+                    break;
+                case REJECTED:
+                    existingLocation.setRejectedMessage(status.getMessage());
+                    existingLocation.setStatus(Status.REJECTED);
+                    break;
+            }
+            locationRepository.save(existingLocation);
+            return ResponseMessage.success();
+        }catch (Exception e){
+            return ResponseMessage.baderror();
         }
-        locationRepository.save(existingLocation);
-        return ResponseMessage.success();
     }
 }

@@ -13,4 +13,8 @@ public class ResponseMessage {
     public static ResponseMessage success() {
         return new ResponseMessage("Successfully!");
     }
+
+    public static ResponseMessage baderror(){
+        return new ResponseMessage("false!");
+    }
 }
