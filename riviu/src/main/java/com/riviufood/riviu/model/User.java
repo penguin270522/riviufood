@@ -1,6 +1,7 @@
 package com.riviufood.riviu.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.riviufood.riviu.enums.StatusUser;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -42,6 +43,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false, length = 200)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private StatusUser statusUser;
 
 
     @ManyToOne

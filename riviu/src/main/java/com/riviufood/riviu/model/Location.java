@@ -1,14 +1,11 @@
 package com.riviufood.riviu.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.riviufood.riviu.enums.Status;
+import com.riviufood.riviu.enums.StatusLocation;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Time;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -61,7 +58,7 @@ public class Location extends BaseEntity{
     private List<Picture> pictures = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private StatusLocation statusLocation;
 
     @ManyToOne
     @JoinColumn(name = "reviewr_id")

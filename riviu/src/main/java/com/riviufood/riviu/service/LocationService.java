@@ -4,7 +4,8 @@ import com.riviufood.riviu.converter.LocationConverter;
 import com.riviufood.riviu.dtos.LocationDTO;
 import com.riviufood.riviu.dtos.ResponseMessage;
 import com.riviufood.riviu.dtos.ReviewDTO;
-import com.riviufood.riviu.enums.Status;
+import com.riviufood.riviu.enums.StatusLocation;
+import com.riviufood.riviu.enums.StatusUser;
 import com.riviufood.riviu.exception.DataNotFoundException;
 import com.riviufood.riviu.model.*;
 import com.riviufood.riviu.repository.LocationRepository;
@@ -54,13 +55,13 @@ public class LocationService implements ILocationService {
            location.setCreateBy(user.getUsername());
            location.setUser(user);
            location.setArea(area);
-           location.setStatus(Status.PENDING);
+           location.setStatusLocation(StatusLocation.PENDING);
            location.setLocationFood(locationFood);
            location.setWatchWord(locationDTO.getWatch_word());
            location.setCreatedDate(new Date());
            locationRepository.save(location);
            locationDTO.setId(location.getId());
-           locationDTO.setStatus(location.getStatus());
+           locationDTO.setStatusLocation(location.getStatusLocation());
            return locationDTO;
        }catch (Exception e){
            throw new RuntimeException("Failed to create location: " + e.getMessage(), e);
@@ -70,7 +71,16 @@ public class LocationService implements ILocationService {
 
     @Override
     public List<Location> findByAll() {
-        return locationRepository.findAll();
+        List<Location> results = new ArrayList<>();
+        List<Location> locationList = locationRepository.findAll();
+        for(Location item : locationList ){
+            Location location = new Location();
+            if(item.getStatusLocation() == StatusLocation.APPROVED && item.getUser().getStatusUser() == StatusUser.ACTIVATE){
+                location = item;
+                results.add(location);
+            }
+        }
+        return results;
     }
 
     @Override
@@ -136,13 +146,13 @@ public class LocationService implements ILocationService {
             User reviewer = (User) authentication.getPrincipal();
             existingLocation.setReviewr(reviewer);
 
-            switch (status.getStatus()) {
+            switch (status.getStatusLocation()) {
                 case APPROVED:
-                    existingLocation.setStatus(Status.APPROVED);
+                    existingLocation.setStatusLocation(StatusLocation.APPROVED);
                     break;
                 case REJECTED:
                     existingLocation.setRejectedMessage(status.getMessage());
-                    existingLocation.setStatus(Status.REJECTED);
+                    existingLocation.setStatusLocation(StatusLocation.REJECTED);
                     break;
             }
             locationRepository.save(existingLocation);

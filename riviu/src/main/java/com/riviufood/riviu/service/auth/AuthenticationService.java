@@ -4,6 +4,7 @@ import com.riviufood.riviu.components.JwtTokenUtil;
 import com.riviufood.riviu.dtos.AuthenticationDTO;
 import com.riviufood.riviu.dtos.ProfileDTO;
 import com.riviufood.riviu.dtos.UserDto;
+import com.riviufood.riviu.enums.StatusUser;
 import com.riviufood.riviu.model.Collections;
 import com.riviufood.riviu.model.Role;
 import com.riviufood.riviu.model.User;
@@ -46,6 +47,7 @@ public class AuthenticationService implements IUserService {
                 .lastName("")
                 .email(userDto.getEmail())
                 .role(role)
+                .statusUser(StatusUser.ACTIVATE)
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .build();
 

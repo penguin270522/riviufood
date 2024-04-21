@@ -1,5 +1,5 @@
 package com.riviufood.riviu.enums;
 
-public enum Status {
+public enum StatusLocation {
     PENDING,APPROVED,REJECTED
 }
