@@ -38,7 +38,7 @@ public class LocationController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllLocation(){
-        List<Location> locationList= locationService.findByAll();
+        List<Location> locationList= locationService.getLocationWithAPRROVED();
         return ResponseEntity.ok(locationList);
     }
 

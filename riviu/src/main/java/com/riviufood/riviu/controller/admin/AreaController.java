@@ -1,4 +1,4 @@
-package com.riviufood.riviu.controller.user;
+package com.riviufood.riviu.controller.admin;
 
 import com.riviufood.riviu.dtos.AreaDTO;
 import com.riviufood.riviu.model.Area;

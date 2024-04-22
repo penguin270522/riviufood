@@ -24,18 +24,10 @@ public class PostsController {
     @PostMapping("/{postId}")
     public ResponseEntity<?> createPost (
             @PathVariable long postId,
-            @RequestBody PostDTO postDTO,
-            BindingResult result){
+            @RequestBody PostDTO postDTO
+           ){
         try{
-            if(result.hasErrors()){
-                List<String> erroMessage = result.getFieldErrors()
-                        .stream()
-                        .map(FieldError::getDefaultMessage)
-                        .toList();
-                return ResponseEntity.badRequest().body(erroMessage);
-            }
             Post post = postService.createPosts(postDTO, postId);;
-
             return ResponseEntity.ok().body(post);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

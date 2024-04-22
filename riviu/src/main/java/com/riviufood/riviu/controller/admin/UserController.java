@@ -1,6 +1,5 @@
 package com.riviufood.riviu.controller.admin;
 
-import com.riviufood.riviu.dtos.ResponseMessage;
 import com.riviufood.riviu.dtos.UserDto;
 import com.riviufood.riviu.service.auth.UserService;
 import lombok.AllArgsConstructor;

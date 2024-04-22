@@ -161,4 +161,17 @@ public class LocationService implements ILocationService {
             return ResponseMessage.baderror();
         }
     }
+
+    @Override
+    public List<Location> getLocationWithAPRROVED() {
+        List<Location> results = new ArrayList<>();
+        List<Location> listLocation = locationRepository.getLocationApproved();
+        for(Location item : listLocation){
+            if(item.getUser().getStatusUser() == StatusUser.ACTIVATE){
+                Location location = item;
+                results.add(location);
+            }
+        }
+        return results;
+    }
 }

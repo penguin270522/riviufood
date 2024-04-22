@@ -1,5 +1,6 @@
 package com.riviufood.riviu.controller.user;
 
+import com.riviufood.riviu.dtos.ResponseMessage;
 import com.riviufood.riviu.model.CollectionPost;
 import com.riviufood.riviu.service.CollectionPostService;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,8 @@ public class CollectionPostController {
 
 
     @PostMapping("/{postId}")
-    public ResponseEntity<CollectionPost> saveCollectionPost(@PathVariable Long postId){
-        CollectionPost collectionPost = collectionPostService.savePost(postId);
+    public ResponseEntity<ResponseMessage> saveCollectionPost(@PathVariable Long postId){
+        ResponseMessage collectionPost = collectionPostService.savePost(postId);
         return ResponseEntity.ok(collectionPost);
     }
 

@@ -28,4 +28,6 @@ public interface ILocationService {
     ResponseMessage updateLocation(Long id, LocationDTO locationDTO);
 
     ResponseMessage reviewrLocation(Long locationId, ReviewDTO status);
+
+    List<Location> getLocationWithAPRROVED();
 }

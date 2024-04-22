@@ -10,4 +10,7 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     @Query("select u from Location u where u.name like %?1%")
     List<Location> searchByName(String name);
 
+    @Query("select u from Location u where u.statusLocation = 'APPROVED'")
+    List<Location> getLocationApproved();
+
 }

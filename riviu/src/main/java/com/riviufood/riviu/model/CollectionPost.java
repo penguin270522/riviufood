@@ -21,4 +21,8 @@ public class CollectionPost {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
 }
