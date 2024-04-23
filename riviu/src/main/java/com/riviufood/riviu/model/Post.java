@@ -20,6 +20,7 @@ public class Post extends BaseEntity {
     private String content;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "location_id")
     private Location location;
 
@@ -36,6 +37,7 @@ public class Post extends BaseEntity {
     private List<Picture> picture = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+
     private List<CollectionPost> collectionPosts = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
