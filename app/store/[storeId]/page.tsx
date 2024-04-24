@@ -46,19 +46,19 @@ export default function StoreDetail() {
             {/* title */}
             <div className="flex gap-4">
               <div className="relative w-24 h-24 rounded-xl overflow-hidden">
-                <Image
+                {/* <Image
                   src={`${baseURL}/stores/image/${storeId}/${storeDetail?.foundStore?.images[0]}`}
                   alt="banner"
                   fill
                   className="object-cover"
-                />
+                /> */}
               </div>
               <div>
                 <h2 className="text-txt-primary text-3xl font-semibold">
                   {storeDetail?.foundStore?.name}
                 </h2>
                 <p className="text-second font-medium text-lg mt-3">
-                  {storeDetail?.foundStore?.slogan}
+                  {storeDetail?.foundStore?.watch_word}
                 </p>
               </div>
             </div>
@@ -170,8 +170,8 @@ export default function StoreDetail() {
                   />
                   <span>Giá tiền:</span>
                   <p>
-                    {storeDetail?.foundStore.price_lowest}
-                    VND - {storeDetail?.foundStore.price_highest}VND
+                    {storeDetail?.foundStore.lowestPrince}
+                    VND - {storeDetail?.foundStore.highestPrince}VND
                   </p>
                 </div>
                 {/* time infor */}
@@ -185,8 +185,8 @@ export default function StoreDetail() {
                   <span>Thời gian:</span>
                   <span className="text-second">Đang mở cửa</span>
                   <span>
-                    ({storeDetail?.foundStore.open_time} -{" "}
-                    {storeDetail?.foundStore.close_time})
+                    ({storeDetail?.foundStore.openTime} -{" "}
+                    {storeDetail?.foundStore.closeTime})
                   </span>
                 </div>
               </div>
@@ -194,7 +194,7 @@ export default function StoreDetail() {
           </div>
 
           {/* images */}
-          <div>
+          {/* <div>
             <div className="grid grid-cols-4 w-full shadow-lg aspect-[3/1] gap-3 relative overflow-hidden">
               <>
                 {storeDetail && storeDetail?.foundStore?.images.length > 5 ? (
@@ -223,7 +223,7 @@ export default function StoreDetail() {
                   </div>
                 ))}
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* body */}
