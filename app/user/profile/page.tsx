@@ -51,7 +51,13 @@ export default function Profile() {
       }
     };
     if (userId) getUser();
-  }, [currentUser?.avatar, currentUser?._id, userId]);
+  }, [
+    {
+      /*currentUser?.avatar,*/
+    },
+    currentUser?.id,
+    userId,
+  ]);
 
   const handleChangeTag = (tagKey: TAG) => {
     setTagFilter(tagKey);
@@ -74,7 +80,7 @@ export default function Profile() {
           <div className="flex item-center gap-8">
             {/* avatar */}
             <div className="relative w-[200px] h-[200px] shadow-md rounded-full">
-              <Image
+              {/* <Image
                 src={
                   selectedUser?.avatar
                     ? `${baseURL}/users/avatar/${selectedUser?.avatar}`
@@ -83,7 +89,7 @@ export default function Profile() {
                 alt="avatar"
                 fill
                 className="rounded-full object-cover"
-              />
+              /> */}
 
               <div
                 className="block absolute bottom-0 left-0 rounded-xl bg-[#6c757d] z-10 font-medium cursor-pointer text-white p-2 hover:opacity-90 transition-all"
@@ -108,7 +114,7 @@ export default function Profile() {
             <div className="flex gap-4 mt-6 mb-3 items-center">
               <div className="text-lg">
                 <span className="font-medium text-xl">1</span>
-bài viết
+                bài viết
               </div>
               <div className="text-lg">
                 <span className="font-medium text-xl">0</span> người theo dõi

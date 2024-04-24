@@ -74,17 +74,18 @@ export interface ILocationReview {
   countLocation: string;
 }
 export interface IStore {
-  id: string;
   name: string;
-  slogan: string;
-  cuisine_national: string;
-  images: string[];
-  open_time: string;
-  close_time: string;
-  price_highest: number;
-  price_lowest: number;
+  watch_word: string;
+  locationFood_id: number;
+  openTime: string;
+  closeTime: string;
   address: string;
-  owner: string;
+  //images: FileList;
+  numberPhone: string;
+  highestPrince: string;
+  lowestPrince: string;
+  area_id: number;
+  id: string;
 }
 
 export interface IComment {
@@ -120,6 +121,7 @@ export interface IStoreRead {
   highestPrince: string;
   lowestPrince: string;
   area_id: number;
+  id: string;
 }
 
 export interface IReviewCuisine {

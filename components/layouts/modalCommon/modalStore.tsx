@@ -18,7 +18,9 @@ import axios from "axios";
 export default function ModalStore() {
   const { typeModal } = useAppSelector((state) => state.modal);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { currentUser } = useAppSelector((state) => state.auth);
+  const { currentUser, currentNationalReview } = useAppSelector(
+    (state) => state.auth
+  );
   const [imgsBlob, setImgsBlob] = useState<string[]>([]);
   const [storeData, setStoreData] = useState<ICreateStore>({
     name: "",
@@ -76,7 +78,7 @@ export default function ModalStore() {
       });
     }
   };
-  const { currentDistrict, currentNational, access_token } = useAppSelector(
+  const { currentDistrict, access_token } = useAppSelector(
     (state) => state.auth
   );
   const dispatch = useAppDispatch();
@@ -98,9 +100,10 @@ export default function ModalStore() {
       getDistricts();
     }
   }, [access_token, currentDistrict]);
+  console.log("current", currentDistrict);
 
   useEffect(() => {
-    if (access_token && !currentNational) {
+    if (access_token && !currentNationalReview) {
       const getNationals = async () => {
         try {
           const National = await getNationalFromAPI(access_token);
@@ -116,8 +119,8 @@ export default function ModalStore() {
       };
       getNationals();
     }
-  }, [access_token, currentNational]);
-  // console.log(currentNational);
+  }, [access_token, currentNationalReview]);
+  console.log(currentNationalReview);
 
   const handleSubmit = async () => {
     if (!currentUser?.id) {
@@ -242,9 +245,9 @@ export default function ModalStore() {
                 className="w-full outline-none"
               >
                 <option value="">Chọn món ăn</option>
-                {currentNational &&
-                  Array.isArray(currentNational) &&
-                  currentNational.map((national) => (
+                {currentNationalReview &&
+                  Array.isArray(currentNationalReview) &&
+                  currentNationalReview.map((national) => (
                     <option key={national.key} value={national.id}>
                       {national.value}
                     </option>

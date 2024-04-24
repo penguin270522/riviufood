@@ -19,8 +19,8 @@ const authSlice = createSlice({
     currentUser: null as IUser | null,
     currentDistrict: null as IDistrict | null,
     currentNational: null as INational | null,
-    currentLocationReview: null as ILocationReview | null,
-    currentNationalReview: null as IStore | null,
+    currentLocationReview: null as IStore | null,
+    currentNationalReview: null as ILocationReview | null,
   },
   reducers: {
     userLogout: (state) => {
@@ -54,7 +54,7 @@ const authSlice = createSlice({
       state.currentDistrict = action.payload;
     },
     setNational: (state, action) => {
-      state.currentNational = action.payload;
+      state.currentNationalReview = action.payload;
     },
     setToken: (state, action) => {
       state.access_token = action.payload;

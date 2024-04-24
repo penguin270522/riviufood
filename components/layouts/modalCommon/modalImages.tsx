@@ -42,7 +42,7 @@ export default function ModalImages() {
       dispatch(
         setCurrentUserLogin({
           access_token: data.token,
-          user: data.user,
+          currentUser: data.user,
         })
       );
       saveAuthToken(data.token);
@@ -71,7 +71,7 @@ export default function ModalImages() {
       handleCloseModal={() => dispatch(removeModalType())}
       commonStyles="max-w-[1000px]"
     >
-     123
+      123
     </Modal>
   );
 }

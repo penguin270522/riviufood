@@ -5,7 +5,7 @@ import { Img } from "@/components/commons";
 import Desc from "@/components/commons/desc";
 import LoadingScreen from "@/components/commons/loading";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setNational, setUserMe } from "@/redux/slices/authSlice";
+import { setNational, setReviews } from "@/redux/slices/authSlice";
 import { baseURL } from "@/utils/api";
 import {
   clearAllSearchParams,
@@ -13,7 +13,7 @@ import {
   updateSearchParams,
 } from "@/utils/common";
 import { CUISINE_NATIONAL_FOOD } from "@/utils/data";
-import { IReviewCuisine } from "@/utils/interface";
+import { IReviewCuisine, IStoreRead } from "@/utils/interface";
 import {
   getNationalFromAPI,
   getReviewsByNational,
@@ -26,7 +26,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ReviewsCuisineNational() {
-  const [reviews, setReviews] = useState<IReviewCuisine[]>([]);
+  const [reviews] = useState<IStoreRead[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -45,7 +45,7 @@ export default function ReviewsCuisineNational() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (access_token && !currentUser) {
+    if (access_token && !currentLocationReview) {
       const getReviews = async () => {
         setIsLoading(true);
         try {
@@ -54,7 +54,7 @@ export default function ReviewsCuisineNational() {
             cuisine_national
           );
           if (LocationData) {
-            dispatch(setUserMe(LocationData));
+            dispatch(setReviews(LocationData));
           } else {
             console.log("Không tìm thấy thông tin bài viết.");
           }
@@ -68,15 +68,15 @@ export default function ReviewsCuisineNational() {
 
       getReviews();
     }
-  }, [currentNationalReview]);
+  }, [currentLocationReview]);
   useEffect(() => {
-    if (access_token && !currentLocationReview) {
+    if (access_token && !currentNationalReview) {
       const getNationals = async () => {
         try {
           const National = await getNationalFromAPI(access_token);
           if (National) {
-            currentLocationReview == dispatch(setNational(National));
-            //console.log(National);
+            dispatch(setNational(National));
+            console.log(National);
           } else {
             console.log("Không tìm thấy món ăn nào.");
           }
@@ -86,34 +86,40 @@ export default function ReviewsCuisineNational() {
       };
       getNationals();
     }
-  }, [currentLocationReview]);
+  }, [currentNationalReview]);
+  console.log(currentNationalReview);
   console.log(currentLocationReview);
   const handleChangeSearchParams = (key: string, value: string) => {
     const params = updateSearchParams(key, value);
     router.replace(params, { scroll: false });
   };
 
-  const handleUpdateListRevew = (userId: string, reviewId: string) => {
+  const handleUpdateListRevew = (userId: number, reviewId: string) => {
     const review = reviews.find((review) => review.id === reviewId);
 
-    const currentUserIsLike = review?.favourities.includes(userId);
+    const currentUserIsLike = review?.area_id === userId;
 
     let newFavourities: string[] = [];
 
-    if (currentUserIsLike && review) {
-      newFavourities = review?.favourities.filter(
-        (userIdFavourite) => userIdFavourite !== userId
-      );
-    } else {
-      newFavourities.push(userId);
-    }
+    // if (review) {
+    //   if (currentUserIsLike) {
+    //     // Người dùng muốn bỏ thích bài viết
+    //     newFavourities = review.favourities.filter(
+    //       (userIdFavourite) => userIdFavourite !== userId
+    //     );
+    //   } else {
+    //     // Người dùng muốn thích bài viết
+    //     newFavourities = review.favourities ? [...review.favourities] : [];
+    //     newFavourities.push(userId);
+    //   }
+    // }
 
-    const updatedReviews = reviews.map((review) => {
-      if (review.id === reviewId) review.favourities = newFavourities;
-      return review;
-    });
+    // const updatedReviews = reviews.map((review) => {
+    //   if (review.id === reviewId) review.favourities = newFavourities;
+    //   return review;
+    // });
 
-    setReviews(updatedReviews);
+    // setReviews(updatedReviews);
   };
 
   const handleLikeReviewPost = async (reviewId: string) => {
@@ -122,12 +128,12 @@ export default function ReviewsCuisineNational() {
       return;
     }
 
-    handleUpdateListRevew(currentUser.id, reviewId);
-    try {
-      await likeReview(reviewId, currentUser.id);
-    } catch (error) {
-      showToast("Lỗi trong quá trình xử lý", "error");
-    }
+    // handleUpdateListRevew(currentUser?.id, reviewId);
+    // try {
+    //   await likeReview(reviewId, currentUser.id);
+    // } catch (error) {
+    //   showToast("Lỗi trong quá trình xử lý", "error");
+    // }
   };
 
   const handleClearSearchParams = () => {
@@ -153,9 +159,9 @@ export default function ReviewsCuisineNational() {
           {/* detail */}
           <div className="flex flex-col justify-center items-center gap-2 p-6 w-full">
             <div className="flex gap-2">
-              {currentLocationReview ? (
+              {currentNationalReview ? (
                 <span className="text-xl font-medium">
-                  {currentLocationReview.countLocation} bài viết
+                  {currentNationalReview.countLocation} bài viết
                 </span>
               ) : (
                 <span className="text-xl font-medium">0 bài viết</span>
@@ -220,9 +226,8 @@ export default function ReviewsCuisineNational() {
           </div>
 
           {/* w-75 */}
-          <div className="w-[70%]">
+          {/* <div className="w-[70%]">
             <div className="grid grid-cols-1 gap-6">
-              {/* card */}
               {reviews.length ? (
                 reviews.map((review, ind) => (
                   <Card
@@ -237,7 +242,7 @@ export default function ReviewsCuisineNational() {
                 </div>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
